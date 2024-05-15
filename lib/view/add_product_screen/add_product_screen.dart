@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_grocery_store_admin/controller/add_product_screen_controller.dart';
-import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 import 'package:provider/provider.dart';
+
+import 'widgets/add_image_widget.dart';
 
 class AddProductScreen extends StatelessWidget {
   const AddProductScreen({super.key});
@@ -21,6 +21,7 @@ class AddProductScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
+          key: context.read<AddProductScreenController>().formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -34,6 +35,38 @@ class AddProductScreen extends StatelessWidget {
                 minLines: 1,
                 maxLines: 10,
                 decoration: const InputDecoration(labelText: 'Description'),
+              ),
+              const SizedBox(height: 25),
+              DropdownButtonFormField<String>(
+                borderRadius: BorderRadius.circular(10),
+                hint: const Text('Select a category'),
+                value:
+                    context.read<AddProductScreenController>().selectedCategory,
+                items: context
+                    .read<FireStoreController>()
+                    .categoryList
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e.id,
+                        child: Row(
+                          children: [
+                            MyNetworkImage(
+                              imageUrl: e.imageUrl ?? '',
+                              height: 50,
+                              width: 50,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(e.name ?? '')
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  context
+                      .read<AddProductScreenController>()
+                      .onCategorySelected(value);
+                },
               ),
               const SizedBox(height: 25),
               TextFormField(
@@ -73,75 +106,32 @@ class AddProductScreen extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => AddImageWidget(
                       onTap: () {
-                        value.pickImage();
+                        value.pickImage(context);
                       },
-                      imagePath: index == value.imagesList.length
+                      imageFile: index == value.imagesList.length
                           ? null
-                          : value.imagesList[index].path,
+                          : value.imagesList[index],
                     ),
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 10),
                     itemCount: provider.imagesList.length + 1,
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class AddImageWidget extends StatelessWidget {
-  const AddImageWidget({
-    super.key,
-    this.imagePath,
-    this.onTap,
-    this.borderRadius,
-  });
-  final String? imagePath;
-  final void Function()? onTap;
-  final BorderRadius? borderRadius;
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: borderRadius ?? BorderRadius.circular(10),
-      child: Container(
-          clipBehavior: Clip.antiAlias,
-          height: 100,
-          width: 100,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius ?? BorderRadius.circular(10),
-            image: imagePath != null
-                ? DecorationImage(image: FileImage(File(imagePath!)))
-                : null,
-            border: Border.all(
-              color: ColorConstants.hintColor,
-              width: 2,
-            ),
-          ),
-          child: imagePath == null
-              ? const Icon(
-                  Icons.camera,
-                  size: 50,
-                )
-              : Align(
-                  alignment: Alignment.bottomRight,
-                  child: IconButton.filled(
-                      constraints: BoxConstraints.loose(const Size.square(30)),
-                      padding: const EdgeInsets.all(5),
-                      iconSize: 18,
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.delete,
-                      )),
-                ) /* Image.file(
-                File(imagePath!),
-                fit: BoxFit.cover,
-              ), */
-          ),
+      bottomNavigationBar: ElevatedButton(
+        onPressed: () {
+          if (context
+              .read<AddProductScreenController>()
+              .formKey
+              .currentState!
+              .validate()) {}
+        },
+        child: const Text('Add Product'),
+      ),
     );
   }
 }

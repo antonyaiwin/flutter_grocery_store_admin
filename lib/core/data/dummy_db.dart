@@ -3,67 +3,67 @@ import 'package:flutter_grocery_store_admin/model/category_model.dart';
 import '../../model/product_model.dart';
 
 abstract class DummyDb {
-  static List<CategoryModel> groceryCategories = [
-    CategoryModel(
-      id: 1,
-      name: 'Fruits',
-      imageUrl:
-          'https://freepngimg.com/thumb/fruit/4-2-fruit-png-image-thumb.png',
-    ),
-    CategoryModel(
-      id: 2,
-      name: 'Vegetables',
-      imageUrl:
-          'https://static.vecteezy.com/system/resources/thumbnails/022/984/730/small_2x/vegetable-transparent-free-png.png',
-    ),
-    CategoryModel(
-      id: 3,
-      name: 'Dairy',
-      imageUrl:
-          'https://img.pikbest.com/origin/09/10/23/83mpIkbEsTeNM.png!sw800',
-    ),
-    CategoryModel(
-      id: 4,
-      name: 'Bakery',
-      imageUrl:
-          'https://www.nicepng.com/png/full/289-2897370_bakery-items-png.png',
-    ),
-    CategoryModel(
-      id: 5,
-      name: 'Meat',
-      imageUrl:
-          'https://static.vecteezy.com/system/resources/previews/032/325/229/original/raw-chicken-meat-isolated-on-transparent-background-file-cut-out-ai-generated-png.png',
-    ),
-    CategoryModel(
-      id: 6,
-      name: 'Seafood',
-      imageUrl:
-          'https://static.vecteezy.com/system/resources/previews/022/984/294/original/steamed-fish-transparent-free-png.png',
-    ),
-    CategoryModel(
-      id: 7,
-      name: 'Canned Goods',
-      imageUrl:
-          'https://static.wikia.nocookie.net/last-day-on-earth-survival/images/c/c3/Canned_Food.png/revision/latest/thumbnail/width/360/height/450?cb=20190824175453',
-    ),
-    CategoryModel(
-      id: 8,
-      name: 'Grains',
-      imageUrl:
-          'https://freepngimg.com/save/53730-grain-hd-download-free-image/500x306',
-    ),
-    CategoryModel(
-      id: 9,
-      name: 'Beverages',
-      imageUrl:
-          'https://i.pinimg.com/originals/bb/1d/37/bb1d37ad9822cda7018f5fe02bc2f60f.png',
-    ),
-    CategoryModel(
-      id: 10,
-      name: 'Snacks',
-      imageUrl: 'https://clipground.com/images/snacks-png-2.png',
-    ),
-  ];
+  // static List<CategoryModel> groceryCategories = [
+  //   CategoryModel(
+  //     id: 1,
+  //     name: 'Fruits',
+  //     imageUrl:
+  //         'https://freepngimg.com/thumb/fruit/4-2-fruit-png-image-thumb.png',
+  //   ),
+  //   CategoryModel(
+  //     id: 2,
+  //     name: 'Vegetables',
+  //     imageUrl:
+  //         'https://static.vecteezy.com/system/resources/thumbnails/022/984/730/small_2x/vegetable-transparent-free-png.png',
+  //   ),
+  //   CategoryModel(
+  //     id: 3,
+  //     name: 'Dairy',
+  //     imageUrl:
+  //         'https://img.pikbest.com/origin/09/10/23/83mpIkbEsTeNM.png!sw800',
+  //   ),
+  //   CategoryModel(
+  //     id: 4,
+  //     name: 'Bakery',
+  //     imageUrl:
+  //         'https://www.nicepng.com/png/full/289-2897370_bakery-items-png.png',
+  //   ),
+  //   CategoryModel(
+  //     id: 5,
+  //     name: 'Meat',
+  //     imageUrl:
+  //         'https://static.vecteezy.com/system/resources/previews/032/325/229/original/raw-chicken-meat-isolated-on-transparent-background-file-cut-out-ai-generated-png.png',
+  //   ),
+  //   CategoryModel(
+  //     id: 6,
+  //     name: 'Seafood',
+  //     imageUrl:
+  //         'https://static.vecteezy.com/system/resources/previews/022/984/294/original/steamed-fish-transparent-free-png.png',
+  //   ),
+  //   CategoryModel(
+  //     id: 7,
+  //     name: 'Canned Goods',
+  //     imageUrl:
+  //         'https://static.wikia.nocookie.net/last-day-on-earth-survival/images/c/c3/Canned_Food.png/revision/latest/thumbnail/width/360/height/450?cb=20190824175453',
+  //   ),
+  //   CategoryModel(
+  //     id: 8,
+  //     name: 'Grains',
+  //     imageUrl:
+  //         'https://freepngimg.com/save/53730-grain-hd-download-free-image/500x306',
+  //   ),
+  //   CategoryModel(
+  //     id: 9,
+  //     name: 'Beverages',
+  //     imageUrl:
+  //         'https://i.pinimg.com/originals/bb/1d/37/bb1d37ad9822cda7018f5fe02bc2f60f.png',
+  //   ),
+  //   CategoryModel(
+  //     id: 10,
+  //     name: 'Snacks',
+  //     imageUrl: 'https://clipground.com/images/snacks-png-2.png',
+  //   ),
+  // ];
 
   static List<ProductModel> groceryItems = [
     ProductModel(

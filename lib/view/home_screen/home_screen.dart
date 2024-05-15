@@ -1,6 +1,11 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/controller/add_product_screen_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/home_screen_controller.dart';
+import 'package:flutter_grocery_store_admin/core/data/dummy_db.dart';
 import 'package:flutter_grocery_store_admin/view/add_product_screen/add_product_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +24,7 @@ class HomeScreen extends StatelessWidget {
       ),
       bottomNavigationBar: const HomeBottomNavBar(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           Navigator.push(
             context,
             MaterialPageRoute(

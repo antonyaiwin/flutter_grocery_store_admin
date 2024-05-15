@@ -8,13 +8,18 @@ import 'package:flutter_grocery_store_admin/view/crop_image_screen/crop_image_sc
 import 'package:image_picker/image_picker.dart';
 
 class AddProductScreenController extends ChangeNotifier {
+  GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController barcodeController = TextEditingController();
+  String? selectedCategory;
+
   List<File> imagesList = [];
 
-  List<XFile> imagesList = [];
+  onCategorySelected(String? value) {
+    selectedCategory = value;
+  }
 
   Future<void> scanBarcode() async {
     String result = await FlutterBarcodeScanner.scanBarcode(
