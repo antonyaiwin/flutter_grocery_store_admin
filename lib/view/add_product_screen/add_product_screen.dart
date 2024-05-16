@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_grocery_store_admin/controller/add_product_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';

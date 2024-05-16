@@ -82,7 +82,7 @@ abstract class DummyDb {
       name: 'Banana',
       description: 'Ripe and sweet banana',
       imageUrl:
-          'https://png.pngtree.com/png-clipart/20220716/ourmid/pngtree-banana-yellow-fruit-banana-skewers-png-image_5944324.png',
+          'https://static.vecteezy.com/system/resources/thumbnails/023/290/773/small/fresh-red-apple-isolated-on-transparent-background-generative-ai-png.png',
       price: 0.99,
       rating: 4.3,
       ratingCount: 80,

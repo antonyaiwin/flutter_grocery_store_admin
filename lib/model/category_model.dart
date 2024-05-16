@@ -27,7 +27,7 @@ class CategoryModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      // 'id': id,
+      'id': id,
       'name': name,
       'imageUrl': imageUrl,
     };
@@ -44,7 +44,7 @@ class CategoryModel {
       QueryDocumentSnapshot<Map<String, dynamic>> query) {
     var map = query.data();
     return CategoryModel(
-      id: query.id,
+      id: map['id'],
       name: map['name'] != null ? map['name'] as String : null,
       imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : null,
     );

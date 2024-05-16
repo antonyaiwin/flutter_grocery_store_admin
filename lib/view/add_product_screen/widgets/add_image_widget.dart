@@ -37,8 +37,8 @@ class AddImageWidget extends StatelessWidget {
           ),
           child: imageFile == null
               ? const Icon(
-                  Icons.camera,
-                  size: 50,
+                  Icons.add_photo_alternate_outlined,
+                  size: 35,
                 )
               : Stack(
                   children: [

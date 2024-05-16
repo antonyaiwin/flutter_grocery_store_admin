@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/controller/cart_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/firebase/firebase_storage_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
 import 'package:flutter_grocery_store_admin/view/splash_screen/splash_screen.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => FireStoreController(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FirebaseStorageController(),
         ),
       ],
       child: MaterialApp(

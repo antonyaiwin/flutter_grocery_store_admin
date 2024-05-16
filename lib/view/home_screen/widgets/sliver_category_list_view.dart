@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_grocery_store_admin/controller/add_category_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
-import 'package:flutter_grocery_store_admin/core/data/dummy_db.dart';
+import 'package:flutter_grocery_store_admin/utils/global_widgets/elevated_card.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
+import 'package:flutter_grocery_store_admin/view/add_category_screen/add_category_screen.dart';
 import 'package:provider/provider.dart';
 
 class SliverCategoryListView extends StatelessWidget {
@@ -21,32 +23,76 @@ class SliverCategoryListView extends StatelessWidget {
             clipBehavior: Clip.none,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
-              var e = value.categoryList[index];
-              return Material(
-                elevation: 5,
-                type: MaterialType.canvas,
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: const EdgeInsets.all(5),
+              if (index == 0) {
+                return ElevatedCard(
                   height: 100,
                   width: 100,
-                  child: Column(children: [
-                    Expanded(
-                        child: MyNetworkImage(
-                      imageUrl: e.imageUrl ?? '',
-                      fit: BoxFit.cover,
-                    )),
-                    Text(
-                      e.name ?? '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    )
-                  ]),
+                  elevation: 5,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider<
+                              AddCategoryScreenController>(
+                            create: (BuildContext context) =>
+                                AddCategoryScreenController(
+                                    context.read<FireStoreController>()),
+                            child: const AddCategoryScreen(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Icon(
+                              Icons.add_circle_outline,
+                              size: 30,
+                            ),
+                          ),
+                          Text(
+                            'Add Category',
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+              var e = value.categoryList[index - 1];
+              return ElevatedCard(
+                elevation: 5,
+                height: 100,
+                width: 100,
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Column(children: [
+                      Expanded(
+                          child: MyNetworkImage(
+                        imageUrl: e.imageUrl ?? '',
+                        fit: BoxFit.cover,
+                      )),
+                      Text(
+                        e.name ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    ]),
+                  ),
                 ),
               );
             },
             separatorBuilder: (context, index) => const SizedBox(width: 10),
-            itemCount: value.categoryList.length,
+            itemCount: value.categoryList.length + 1,
           ),
         ),
       ),

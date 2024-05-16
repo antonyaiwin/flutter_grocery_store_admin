@@ -15,10 +15,11 @@ class CropImageScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                cropController.crop();
-              },
-              icon: const Icon(Icons.done))
+            onPressed: () {
+              cropController.crop();
+            },
+            icon: const Icon(Icons.done),
+          )
         ],
       ),
       body: Crop(

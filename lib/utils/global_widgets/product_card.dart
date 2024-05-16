@@ -19,68 +19,71 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProductDetailsScreen(item: item),
+    return ElevatedCard(
+      elevation: 5,
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsScreen(item: item),
+          ),
         ),
-      ),
-      child: ElevatedCard(
-        elevation: 5,
-        child: Column(
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: MyNetworkImage(imageUrl: item.imageUrl ?? ''),
-            ),
-            Text(
-              item.name ?? '',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            Row(
-              children: [
-                Text(
-                  '250g',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-            const Spacer(),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '₹${item.price?.toStringAsFixed(1) ?? ''}',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: [
+              AspectRatio(
+                aspectRatio: 1,
+                child: MyNetworkImage(imageUrl: item.imageUrl ?? ''),
+              ),
+              Text(
+                item.name ?? '',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              Row(
+                children: [
+                  Text(
+                    '250g',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                ),
-                Consumer<CartController>(
-                  builder: (BuildContext context, value, Widget? child) =>
-                      AddToCartButton(
-                    count: value.getItemCount(item.id ?? 0),
-                    label: 'ADD',
-                    height: 30,
-                    width: 70,
-                    onTap: () {
-                      value.addItemToCart(item);
-                    },
-                    onAddTap: () {
-                      value.addItemToCart(item);
-                    },
-                    onRemoveTap: () {
-                      value.removeItemFromCart(item);
-                    },
+                ],
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '₹${item.price?.toStringAsFixed(1) ?? ''}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
                   ),
-                )
-              ],
-            ),
-          ],
+                  Consumer<CartController>(
+                    builder: (BuildContext context, value, Widget? child) =>
+                        AddToCartButton(
+                      count: value.getItemCount(item.id ?? 0),
+                      label: 'ADD',
+                      height: 30,
+                      width: 70,
+                      onTap: () {
+                        value.addItemToCart(item);
+                      },
+                      onAddTap: () {
+                        value.addItemToCart(item);
+                      },
+                      onRemoveTap: () {
+                        value.removeItemFromCart(item);
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

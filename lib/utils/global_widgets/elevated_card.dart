@@ -8,7 +8,7 @@ class ElevatedCard extends StatelessWidget {
     this.height,
     this.elevation = 0.0,
     this.borderRadius,
-    this.padding = const EdgeInsets.all(15),
+    this.padding /* = const EdgeInsets.all(15) */,
   });
 
   final Widget? child;
