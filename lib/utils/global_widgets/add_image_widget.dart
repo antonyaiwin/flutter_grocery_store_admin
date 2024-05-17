@@ -1,19 +1,24 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 
-import '../../../core/constants/color_constants.dart';
+import '../../core/constants/color_constants.dart';
 
 class AddImageWidget extends StatelessWidget {
   const AddImageWidget({
     super.key,
     this.imageFile,
     this.onTap,
+    this.onDeletePressed,
     this.borderRadius,
+    this.imageUrl,
   });
   final File? imageFile;
   final void Function()? onTap;
+  final void Function()? onDeletePressed;
   final BorderRadius? borderRadius;
+  final String? imageUrl;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -36,10 +41,12 @@ class AddImageWidget extends StatelessWidget {
                   ),
           ),
           child: imageFile == null
-              ? const Icon(
-                  Icons.add_photo_alternate_outlined,
-                  size: 35,
-                )
+              ? imageUrl == null
+                  ? const Icon(
+                      Icons.add_photo_alternate_outlined,
+                      size: 35,
+                    )
+                  : MyNetworkImage(imageUrl: imageUrl!)
               : Stack(
                   children: [
                     Image.file(imageFile!),
@@ -51,7 +58,7 @@ class AddImageWidget extends StatelessWidget {
                             BoxConstraints.tight(const Size.square(30)),
                         padding: const EdgeInsets.all(5),
                         iconSize: 18,
-                        onPressed: () {},
+                        onPressed: onDeletePressed,
                         icon: const Icon(
                           Icons.delete,
                         ),

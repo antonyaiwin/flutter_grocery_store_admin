@@ -1,9 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
-import '../../controller/cart_controller.dart';
 import 'package:provider/provider.dart';
 
+import '../../controller/cart_controller.dart';
 import '../../model/product_model.dart';
 import '../../view/product_details_screen/product_details_screen.dart';
 import 'add_to_cart_button.dart';
@@ -34,7 +33,10 @@ class ProductCard extends StatelessWidget {
             children: [
               AspectRatio(
                 aspectRatio: 1,
-                child: MyNetworkImage(imageUrl: item.imageUrl ?? ''),
+                child: MyNetworkImage(
+                    imageUrl: item.imageUrl != null && item.imageUrl!.isNotEmpty
+                        ? item.imageUrl![0]
+                        : ''),
               ),
               Text(
                 item.name ?? '',

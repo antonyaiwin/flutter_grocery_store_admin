@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_grocery_store_admin/controller/add_product_screen_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/screens/add_product_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/model/product_model.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
+import 'package:flutter_grocery_store_admin/utils/global_widgets/product_card.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/add_image_widget.dart';
+import '../../utils/functions/functions.dart';
+import '../../utils/global_widgets/add_image_widget.dart';
 
 class AddProductScreen extends StatelessWidget {
   const AddProductScreen({super.key});
@@ -20,13 +23,20 @@ class AddProductScreen extends StatelessWidget {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
-          key: context.read<AddProductScreenController>().formKey,
+          key: provider.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextFormField(
                 controller: provider.nameController,
                 decoration: const InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value != null && value.length >= 3) {
+                    return null;
+                  } else {
+                    return 'Enter a valid name';
+                  }
+                },
               ),
               const SizedBox(height: 25),
               TextFormField(
@@ -34,19 +44,27 @@ class AddProductScreen extends StatelessWidget {
                 minLines: 1,
                 maxLines: 10,
                 decoration: const InputDecoration(labelText: 'Description'),
+                validator: (value) {
+                  if (value != null && value.length >= 3) {
+                    return null;
+                  } else {
+                    return 'Enter a valid Description';
+                  }
+                },
               ),
               const SizedBox(height: 25),
               DropdownButtonFormField<String>(
                 borderRadius: BorderRadius.circular(10),
                 hint: const Text('Select a category'),
-                value:
-                    context.read<AddProductScreenController>().selectedCategory,
+                value: context
+                    .read<AddProductScreenController>()
+                    .selectedCategoryId,
                 items: context
                     .read<FireStoreController>()
                     .categoryList
                     .map(
                       (e) => DropdownMenuItem(
-                        value: e.id,
+                        value: e.collectionDocumentId,
                         child: Row(
                           children: [
                             MyNetworkImage(
@@ -66,6 +84,13 @@ class AddProductScreen extends StatelessWidget {
                       .read<AddProductScreenController>()
                       .onCategorySelected(value);
                 },
+                validator: (value) {
+                  if (value != null) {
+                    return null;
+                  } else {
+                    return 'Please select a category';
+                  }
+                },
               ),
               const SizedBox(height: 25),
               TextFormField(
@@ -75,6 +100,13 @@ class AddProductScreen extends StatelessWidget {
                   prefixIcon: Icon(Icons.currency_rupee),
                 ),
                 keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value != null && double.tryParse(value) != null) {
+                    return null;
+                  } else {
+                    return 'Enter a valid price';
+                  }
+                },
               ),
               const SizedBox(height: 25),
               TextFormField(
@@ -121,15 +153,108 @@ class AddProductScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: ElevatedButton(
-        onPressed: () {
-          if (context
-              .read<AddProductScreenController>()
-              .formKey
-              .currentState!
-              .validate()) {}
-        },
-        child: const Text('Add Product'),
+      bottomNavigationBar: Consumer<AddProductScreenController>(
+        builder: (BuildContext context, value, Widget? child) => ElevatedButton(
+          onPressed: value.uploading
+              ? null
+              : () async {
+                  if (provider.formKey.currentState!.validate()) {
+                    if (value.productModel == null) {
+                      if (provider.barcodeController.text.isNotEmpty) {
+                        var list = (await context
+                            .read<FireStoreController>()
+                            .searchProductsUsingBarcode(
+                                provider.barcodeController.text));
+                        if (list.isNotEmpty &&
+                            !await showDuplicateBarcodeDialog(context, list)) {
+                          return;
+                        }
+                      }
+                      if (await provider.addProduct(context) &&
+                          context.mounted) {
+                        Navigator.pop(context);
+                        showSuccessSnackBar(
+                          context: context,
+                          content:
+                              'Product "${provider.nameController.text}" added.',
+                        );
+                      }
+                    } else if (value.isEdited()) {
+                      // TODO implement this
+
+                      // if (await provider.updateCategory(context) &&
+                      //     context.mounted) {
+                      //   Navigator.pop(context);
+                      //   showSuccessSnackBar(
+                      //     context: context,
+                      //     content:
+                      //         'Category "${provider.nameController.text}" updated.',
+                      //   );
+                      // }
+                    } else {
+                      showErrorSnackBar(
+                          context: context, content: 'No change detected');
+                    }
+                  }
+                },
+          child: value.uploading
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(value.message),
+                    const SizedBox(width: 10),
+                    const CircularProgressIndicator()
+                  ],
+                )
+              : Text(provider.productModel == null
+                  ? 'Add Product'
+                  : 'Update Product'),
+        ),
+      ),
+    );
+  }
+
+  Future<bool> showDuplicateBarcodeDialog(
+      BuildContext context, List<ProductModel> list) async {
+    return await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Duplicate barcode found!'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+                'The entered barcode is used on another product. \nDo you wish to continue?'),
+            SizedBox(
+              height: 230,
+              width: 500,
+              child: ListView.separated(
+                clipBehavior: Clip.none,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) =>
+                    SizedBox(width: 150, child: ProductCard(item: list[index])),
+                separatorBuilder: (BuildContext context, int index) =>
+                    const SizedBox(width: 10),
+                itemCount: list.length,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+            child: const Text('Yes'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            child: const Text('No'),
+          ),
+        ],
       ),
     );
   }

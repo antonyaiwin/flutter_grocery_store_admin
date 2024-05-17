@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/utils/functions/functions.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/add_category_screen_controller.dart';
+import '../../controller/screens/add_category_screen_controller.dart';
 
-import '../add_product_screen/widgets/add_image_widget.dart';
+import '../../utils/global_widgets/add_image_widget.dart';
 
 class AddCategoryScreen extends StatelessWidget {
   const AddCategoryScreen({super.key});
@@ -15,7 +15,9 @@ class AddCategoryScreen extends StatelessWidget {
         context.read<AddCategoryScreenController>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Category'),
+        title: Text(provider.categoryModel == null
+            ? 'Add New Category'
+            : 'Edit Category'),
       ),
       body: Column(
         children: [
@@ -38,6 +40,8 @@ class AddCategoryScreen extends StatelessWidget {
                           value.pickImage(context);
                         },
                         imageFile: value.imageFile,
+                        imageUrl: value.categoryModel?.imageUrl,
+                        onDeletePressed: () => value.deleteImageFile(),
                       ),
                     ),
                     const SizedBox(height: 25),
@@ -65,14 +69,29 @@ class AddCategoryScreen extends StatelessWidget {
                   ? null
                   : () async {
                       if (provider.formKey.currentState!.validate()) {
-                        if (await provider.addCategory(context) &&
-                            context.mounted) {
-                          Navigator.pop(context);
-                          showSuccessSnackBar(
-                            context: context,
-                            content:
-                                'Category "${provider.nameController.text}" added.',
-                          );
+                        if (value.categoryModel == null) {
+                          if (await provider.addCategory(context) &&
+                              context.mounted) {
+                            Navigator.pop(context);
+                            showSuccessSnackBar(
+                              context: context,
+                              content:
+                                  'Category "${provider.nameController.text}" added.',
+                            );
+                          }
+                        } else if (value.isEdited()) {
+                          if (await provider.updateCategory(context) &&
+                              context.mounted) {
+                            Navigator.pop(context);
+                            showSuccessSnackBar(
+                              context: context,
+                              content:
+                                  'Category "${provider.nameController.text}" updated.',
+                            );
+                          }
+                        } else {
+                          showErrorSnackBar(
+                              context: context, content: 'No change detected');
                         }
                       }
                     },
@@ -85,7 +104,9 @@ class AddCategoryScreen extends StatelessWidget {
                         const CircularProgressIndicator()
                       ],
                     )
-                  : const Text('Add Category'),
+                  : Text(provider.categoryModel == null
+                      ? 'Add Category'
+                      : 'Update Category'),
             ),
           ),
         ],

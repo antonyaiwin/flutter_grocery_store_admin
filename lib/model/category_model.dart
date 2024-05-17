@@ -4,10 +4,12 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CategoryModel {
+  String? collectionDocumentId;
   String? id;
   String? name;
   String? imageUrl;
   CategoryModel({
+    this.collectionDocumentId,
     this.id,
     this.name,
     this.imageUrl,
@@ -44,6 +46,7 @@ class CategoryModel {
       QueryDocumentSnapshot<Map<String, dynamic>> query) {
     var map = query.data();
     return CategoryModel(
+      collectionDocumentId: query.id,
       id: map['id'],
       name: map['name'] != null ? map['name'] as String : null,
       imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : null,

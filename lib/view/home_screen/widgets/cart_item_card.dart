@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../controller/cart_controller.dart';
 import '../../../model/product_model.dart';
 import '../../../utils/global_widgets/add_to_cart_button.dart';
-import '../../../utils/global_widgets/custom_loading_indicator.dart';
+import '../../../utils/global_widgets/my_network_image.dart';
 
 class CartItemCard extends StatelessWidget {
   const CartItemCard({
@@ -28,17 +28,10 @@ class CartItemCard extends StatelessWidget {
             flex: 1,
             child: AspectRatio(
               aspectRatio: 1,
-              child: Image.network(
-                item.imageUrl ?? '',
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
-                  return const Center(
-                    child: CustomLoadingIndicator(),
-                  );
-                },
-              ),
+              child: MyNetworkImage(
+                  imageUrl: item.imageUrl != null && item.imageUrl!.isNotEmpty
+                      ? item.imageUrl![0]
+                      : ''),
             ),
           ),
           const SizedBox(width: 10),

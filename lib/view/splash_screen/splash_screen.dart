@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_grocery_store_admin/controller/home_screen_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/screens/home_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/login_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
 import 'package:flutter_grocery_store_admin/core/constants/image_constants.dart';

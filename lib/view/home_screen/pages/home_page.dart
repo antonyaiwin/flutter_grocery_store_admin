@@ -2,9 +2,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_grocery_store_admin/controller/profile_screen_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/screens/home_screen_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/screens/profile_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
-import 'package:flutter_grocery_store_admin/core/data/dummy_db.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/elevated_card.dart';
 import 'package:flutter_grocery_store_admin/view/profile_screen/profile_screen.dart';
 import 'package:flutter_grocery_store_admin/view/search_screen/search_screen.dart';
@@ -116,29 +117,31 @@ class HomePage extends StatelessWidget {
         ),
         SliverLabelText(
           label: 'Shop by category',
+          onSeeAllPressed: () {
+            context.read<HomeScreenController>().setSelecetedPageIndex(1);
+          },
         ),
         SliverCategoryListView(),
         SliverLabelText(
-          label: 'Saved',
-        ),
-        SliverCategoryListView(),
-        SliverLabelText(
-          label: 'Everything',
+          label: 'All Products',
         ),
         SliverPadding(
-          padding: EdgeInsets.all(20),
-          sliver: SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              childAspectRatio: 9 / 13,
+          padding: EdgeInsets.all(20).copyWith(bottom: 300),
+          sliver: Consumer<FireStoreController>(
+            builder: (BuildContext context, value, Widget? child) =>
+                SliverGrid.builder(
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                childAspectRatio: 9 / 13,
+              ),
+              itemBuilder: (context, index) {
+                var e = value.productList[index];
+                return ProductCard(item: e);
+              },
+              itemCount: value.productList.length,
             ),
-            itemBuilder: (context, index) {
-              var e = DummyDb.groceryItems[index];
-              return ProductCard(item: e);
-            },
-            itemCount: DummyDb.groceryItems.length,
           ),
         ),
       ],

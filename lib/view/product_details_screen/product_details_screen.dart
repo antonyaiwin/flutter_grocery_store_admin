@@ -1,11 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/cart_controller.dart';
 import '../../model/product_model.dart';
 import '../../utils/global_widgets/add_to_cart_button.dart';
-import '../../utils/global_widgets/custom_loading_indicator.dart';
 import '../../utils/global_widgets/my_network_image.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -40,7 +38,11 @@ class ProductDetailsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: MyNetworkImage(imageUrl: item.imageUrl ?? ''),
+                      child: MyNetworkImage(
+                          imageUrl:
+                              item.imageUrl != null && item.imageUrl!.isNotEmpty
+                                  ? item.imageUrl![0]
+                                  : ''),
                     ),
                     const SizedBox(height: 20),
                     Row(

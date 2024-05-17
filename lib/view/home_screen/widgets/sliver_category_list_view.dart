@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_grocery_store_admin/controller/add_category_screen_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/screens/add_category_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/utils/global_widgets/category_card.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/elevated_card.dart';
-import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 import 'package:flutter_grocery_store_admin/view/add_category_screen/add_category_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -66,30 +66,7 @@ class SliverCategoryListView extends StatelessWidget {
                 );
               }
               var e = value.categoryList[index - 1];
-              return ElevatedCard(
-                elevation: 5,
-                height: 100,
-                width: 100,
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Column(children: [
-                      Expanded(
-                          child: MyNetworkImage(
-                        imageUrl: e.imageUrl ?? '',
-                        fit: BoxFit.cover,
-                      )),
-                      Text(
-                        e.name ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    ]),
-                  ),
-                ),
-              );
+              return CategoryCard(item: e);
             },
             separatorBuilder: (context, index) => const SizedBox(width: 10),
             itemCount: value.categoryList.length + 1,
