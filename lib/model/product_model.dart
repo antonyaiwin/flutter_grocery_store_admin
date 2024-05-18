@@ -35,6 +35,71 @@ class ProductModel {
     this.imageUrl,
   });
 
+  String getFormattedMRP() {
+    if (priceMRP == null) {
+      return '';
+    }
+    return _getFormattedNumber(priceMRP!);
+  }
+
+  String getFormattedSellingPrice() {
+    if (priceSelling == null) {
+      return '';
+    }
+    return _getFormattedNumber(priceSelling!);
+  }
+
+  String _getFormattedNumber(num number) {
+    if (number % 1 == 0) {
+      return number.toStringAsFixed(0);
+    } else {
+      return number.toStringAsFixed(1);
+    }
+  }
+
+  String getFormattedQuantity() {
+    if (quantity == null) {
+      return '';
+    } else {
+      String qValue = _getFormattedQuantityValue();
+      switch (unitType) {
+        case UnitType.kilogram:
+          if (quantity! < 1) {
+            return '$qValue g';
+          } else {
+            return '$qValue Kg';
+          }
+        case UnitType.liter:
+          if (quantity! < 1) {
+            return '$qValue ml';
+          } else {
+            return '$qValue L';
+          }
+        case UnitType.unit:
+          return '${quantity!.toStringAsFixed(0)} pc';
+        default:
+          return '';
+      }
+    }
+  }
+
+  String _getFormattedQuantityValue() {
+    if (quantity! < 1) {
+      return '${quantity! * 1000}';
+    } else if (quantity! % 1 == 0) {
+      return quantity!.toStringAsFixed(0);
+    } else {
+      return quantity!.toStringAsFixed(1);
+    }
+  }
+
+  String? getOffer() {
+    if (priceMRP == null || priceSelling == null || priceMRP == priceSelling) {
+      return null;
+    }
+    return '₹${_getFormattedNumber(priceMRP! - priceSelling!)} Off';
+  }
+
   factory ProductModel.fromQueryDocumentSnapshot(
       QueryDocumentSnapshot<Map<String, dynamic>> ref) {
     return ProductModel.fromMap(ref.data())

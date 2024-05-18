@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 import 'package:provider/provider.dart';
 
@@ -27,65 +29,114 @@ class ProductCard extends StatelessWidget {
             builder: (context) => ProductDetailsScreen(item: item),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              AspectRatio(
-                aspectRatio: 1,
-                child: MyNetworkImage(
-                    imageUrl: item.imageUrl != null && item.imageUrl!.isNotEmpty
-                        ? item.imageUrl![0]
-                        : ''),
-              ),
-              Text(
-                item.name ?? '',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              Row(
-                children: [
-                  Text(
-                    '250g',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Row(
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
                 children: [
                   Expanded(
-                    child: Text(
-                      '₹${item.priceMRP?.toStringAsFixed(1) ?? ''}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                    flex: 6,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: MyNetworkImage(
+                          imageUrl:
+                              item.imageUrl != null && item.imageUrl!.isNotEmpty
+                                  ? item.imageUrl![0]
+                                  : ''),
                     ),
                   ),
-                  // Consumer<CartController>(
-                  //   builder: (BuildContext context, value, Widget? child) =>
-                  //       AddToCartButton(
-                  //     count: value.getItemCount(item.id ?? 0),
-                  //     label: 'ADD',
-                  //     height: 30,
-                  //     width: 70,
-                  //     onTap: () {
-                  //       value.addItemToCart(item);
-                  //     },
-                  //     onAddTap: () {
-                  //       value.addItemToCart(item);
-                  //     },
-                  //     onRemoveTap: () {
-                  //       value.removeItemFromCart(item);
-                  //     },
-                  //   ),
-                  // )
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          item.name ?? '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              item.getFormattedQuantity(),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: [
+                            Text(
+                              '₹${item.getFormattedSellingPrice()}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              '₹${item.getFormattedMRP()}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: ColorConstants.hintColor,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: ColorConstants.hintColor,
+                                  ),
+                            ),
+                            // Consumer<CartController>(
+                            //   builder: (BuildContext context, value, Widget? child) =>
+                            //       AddToCartButton(
+                            //     count: value.getItemCount(item.id ?? 0),
+                            //     label: 'ADD',
+                            //     height: 30,
+                            //     width: 70,
+                            //     onTap: () {
+                            //       value.addItemToCart(item);
+                            //     },
+                            //     onAddTap: () {
+                            //       value.addItemToCart(item);
+                            //     },
+                            //     onRemoveTap: () {
+                            //       value.removeItemFromCart(item);
+                            //     },
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+            if (item.getOffer() != null)
+              Positioned(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: ColorConstants.primaryGreen,
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(5),
+                  child: Text(
+                    item.getOffer()!,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: ColorConstants.primaryWhite,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );

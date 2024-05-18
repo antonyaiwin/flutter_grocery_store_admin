@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/cart_controller.dart';
+import '../../core/constants/color_constants.dart';
 import '../../model/product_model.dart';
 import '../../utils/global_widgets/add_to_cart_button.dart';
 import '../../utils/global_widgets/my_network_image.dart';
@@ -64,11 +65,48 @@ class ProductDetailsScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      '₹${item.priceMRP?.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                    Row(
+                      children: [
+                        Text(
+                          '₹${item.getFormattedSellingPrice()}',
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          '₹${item.getFormattedMRP()}',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: ColorConstants.hintColor,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: ColorConstants.hintColor,
+                                  ),
+                        ),
+                        const SizedBox(width: 10),
+                        if (item.getOffer() != null)
+                          Positioned(
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: ColorConstants.primaryGreen,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(5),
+                              child: Text(
+                                item.getOffer()!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                        color: ColorConstants.primaryWhite,
+                                        fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          )
+                      ],
                     ),
                     Row(
                       children: [
