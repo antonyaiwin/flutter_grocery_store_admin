@@ -81,17 +81,18 @@ class ProductCard extends StatelessWidget {
                                   ),
                             ),
                             const SizedBox(width: 3),
-                            Text(
-                              '₹${item.getFormattedMRP()}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(
-                                    color: ColorConstants.hintColor,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor: ColorConstants.hintColor,
-                                  ),
-                            ),
+                            if (item.getOffer() != null)
+                              Text(
+                                '₹${item.getFormattedMRP()}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      color: ColorConstants.hintColor,
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationColor: ColorConstants.hintColor,
+                                    ),
+                              ),
                             // Consumer<CartController>(
                             //   builder: (BuildContext context, value, Widget? child) =>
                             //       AddToCartButton(

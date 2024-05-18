@@ -86,24 +86,22 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         if (item.getOffer() != null)
-                          Positioned(
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: ColorConstants.primaryGreen,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(15),
-                                ),
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: ColorConstants.primaryGreen,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(15),
                               ),
-                              padding: const EdgeInsets.all(5),
-                              child: Text(
-                                item.getOffer()!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                        color: ColorConstants.primaryWhite,
-                                        fontWeight: FontWeight.bold),
-                              ),
+                            ),
+                            padding: const EdgeInsets.all(5),
+                            child: Text(
+                              item.getOffer()!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                      color: ColorConstants.primaryWhite,
+                                      fontWeight: FontWeight.bold),
                             ),
                           )
                       ],
