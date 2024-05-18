@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/controller/screens/add_category_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/category/category_delete_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/controller/screens/category_view_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
 import 'package:flutter_grocery_store_admin/utils/functions/functions.dart';
 import 'package:flutter_grocery_store_admin/view/add_category_screen/add_category_screen.dart';
+import 'package:flutter_grocery_store_admin/view/category_view_screen/category_view_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/category_model.dart';
@@ -29,7 +31,18 @@ class CategoryCard extends StatelessWidget {
       width: 100,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChangeNotifierProvider(
+                create: (context) =>
+                    CategoryViewScreenController(context, category: item),
+                child: const CategoryViewScreen(),
+              ),
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(5),
           child: Stack(

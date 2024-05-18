@@ -100,6 +100,21 @@ class FireStoreController extends ChangeNotifier {
     return ref;
   }
 
+  Future<List<ProductModel>> getProductByCategory(String? categoryId) async {
+    List<ProductModel> list = [];
+    if (categoryId == null) {
+      return list;
+    }
+    var data = await db
+        .collection(productsCollectionName)
+        .where('categoryId', isEqualTo: categoryId)
+        .get();
+    list = data.docs
+        .map((e) => ProductModel.fromQueryDocumentSnapshot(e))
+        .toList();
+    return list;
+  }
+
 // TODO : implement this correctly
   Future<void> updateProduct(ProductModel product) async {
     await db
