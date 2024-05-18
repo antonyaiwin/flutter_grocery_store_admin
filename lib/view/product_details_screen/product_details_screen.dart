@@ -27,8 +27,7 @@ class ProductDetailsScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(20),
-              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadiusDirectional.circular(15),
@@ -182,7 +181,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      item.priceMRP?.toStringAsFixed(2) ?? '',
+                      item.getFormattedSellingPrice(),
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,

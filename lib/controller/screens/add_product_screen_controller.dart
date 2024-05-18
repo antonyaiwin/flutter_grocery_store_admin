@@ -81,7 +81,9 @@ class AddProductScreenController extends ChangeNotifier {
         return;
       }
 
-      imagesList.add(File(xFile.path)..writeAsBytes(image));
+      var file = File(xFile.path);
+      file.writeAsBytes(image);
+      imagesList.add(file);
       notifyListeners();
     }
   }

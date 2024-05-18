@@ -85,7 +85,7 @@ class ProductModel {
 
   String _getFormattedQuantityValue() {
     if (quantity! < 1) {
-      return '${quantity! * 1000}';
+      return (quantity! * 1000).toStringAsFixed(0);
     } else if (quantity! % 1 == 0) {
       return quantity!.toStringAsFixed(0);
     } else {
@@ -97,7 +97,7 @@ class ProductModel {
     if (priceMRP == null || priceSelling == null || priceMRP == priceSelling) {
       return null;
     }
-    return '₹${_getFormattedNumber(priceMRP! - priceSelling!)} Off';
+    return '₹${_getFormattedNumber(priceMRP! - priceSelling!)} OFF';
   }
 
   factory ProductModel.fromQueryDocumentSnapshot(
