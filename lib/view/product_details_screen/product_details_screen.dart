@@ -65,7 +65,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '₹${item.price?.toStringAsFixed(2)}',
+                      '₹${item.priceMRP?.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -146,7 +146,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      item.price?.toStringAsFixed(2) ?? '',
+                      item.priceMRP?.toStringAsFixed(2) ?? '',
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,

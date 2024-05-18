@@ -36,7 +36,7 @@ class AddCategoryScreen extends StatelessWidget {
                     Consumer<AddCategoryScreenController>(
                       builder: (BuildContext context, value, Widget? child) =>
                           AddImageWidget(
-                        onTap: () {
+                        onCameraPressed: () {
                           value.pickImage(context);
                         },
                         imageFile: value.imageFile,

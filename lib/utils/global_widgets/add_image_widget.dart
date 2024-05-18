@@ -10,12 +10,16 @@ class AddImageWidget extends StatelessWidget {
     super.key,
     this.imageFile,
     this.onTap,
+    this.onCameraPressed,
+    this.onImagePressed,
     this.onDeletePressed,
     this.borderRadius,
     this.imageUrl,
   });
   final File? imageFile;
   final void Function()? onTap;
+  final void Function()? onCameraPressed;
+  final void Function()? onImagePressed;
   final void Function()? onDeletePressed;
   final BorderRadius? borderRadius;
   final String? imageUrl;
@@ -42,9 +46,23 @@ class AddImageWidget extends StatelessWidget {
           ),
           child: imageFile == null
               ? imageUrl == null
-                  ? const Icon(
-                      Icons.add_photo_alternate_outlined,
-                      size: 35,
+                  ? Column(
+                      children: [
+                        IconButton(
+                          onPressed: onImagePressed,
+                          icon: const Icon(
+                            Icons.add_photo_alternate_outlined,
+                            size: 25,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: onCameraPressed,
+                          icon: const Icon(
+                            Icons.add_a_photo_outlined,
+                            size: 25,
+                          ),
+                        ),
+                      ],
                     )
                   : MyNetworkImage(imageUrl: imageUrl!)
               : Stack(

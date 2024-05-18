@@ -58,30 +58,30 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      '₹${item.price?.toStringAsFixed(1) ?? ''}',
+                      '₹${item.priceMRP?.toStringAsFixed(1) ?? ''}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                     ),
                   ),
-                  Consumer<CartController>(
-                    builder: (BuildContext context, value, Widget? child) =>
-                        AddToCartButton(
-                      count: value.getItemCount(item.id ?? 0),
-                      label: 'ADD',
-                      height: 30,
-                      width: 70,
-                      onTap: () {
-                        value.addItemToCart(item);
-                      },
-                      onAddTap: () {
-                        value.addItemToCart(item);
-                      },
-                      onRemoveTap: () {
-                        value.removeItemFromCart(item);
-                      },
-                    ),
-                  )
+                  // Consumer<CartController>(
+                  //   builder: (BuildContext context, value, Widget? child) =>
+                  //       AddToCartButton(
+                  //     count: value.getItemCount(item.id ?? 0),
+                  //     label: 'ADD',
+                  //     height: 30,
+                  //     width: 70,
+                  //     onTap: () {
+                  //       value.addItemToCart(item);
+                  //     },
+                  //     onAddTap: () {
+                  //       value.addItemToCart(item);
+                  //     },
+                  //     onRemoveTap: () {
+                  //       value.removeItemFromCart(item);
+                  //     },
+                  //   ),
+                  // )
                 ],
               ),
             ],

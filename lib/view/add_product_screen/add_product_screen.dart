@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/controller/screens/add_product_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/core/enum/unit_type.dart';
 import 'package:flutter_grocery_store_admin/model/product_model.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/product_card.dart';
+import 'package:flutter_grocery_store_admin/view/photo_screen/photo_screen.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/functions/functions.dart';
@@ -54,8 +58,8 @@ class AddProductScreen extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: 'Category'),
                 borderRadius: BorderRadius.circular(10),
-                hint: const Text('Select a category'),
                 value: context
                     .read<AddProductScreenController>()
                     .selectedCategoryId,
@@ -94,9 +98,9 @@ class AddProductScreen extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               TextFormField(
-                controller: provider.priceController,
+                controller: provider.priceMrpController,
                 decoration: const InputDecoration(
-                  labelText: 'Price',
+                  labelText: 'Price (MRP)',
                   prefixIcon: Icon(Icons.currency_rupee),
                 ),
                 keyboardType: TextInputType.number,
@@ -110,13 +114,85 @@ class AddProductScreen extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               TextFormField(
+                controller: provider.priceSellingController,
+                decoration: const InputDecoration(
+                  labelText: 'Price (Selling)',
+                  prefixIcon: Icon(Icons.currency_rupee),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value != null && double.tryParse(value) != null) {
+                    return null;
+                  } else {
+                    return 'Enter a valid price';
+                  }
+                },
+              ),
+              const SizedBox(height: 25),
+              TextFormField(
+                controller: provider.quantityController,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity',
+                  prefixIcon: Icon(Iconsax.weight_bold),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value != null && double.tryParse(value) != null) {
+                    return null;
+                  } else {
+                    return 'Enter a valid number';
+                  }
+                },
+              ),
+              const SizedBox(height: 25),
+              DropdownButtonFormField<UnitType>(
+                decoration: const InputDecoration(labelText: 'Unit'),
+                borderRadius: BorderRadius.circular(10),
+                hint: const Text('Select a unit'),
+                value:
+                    context.read<AddProductScreenController>().selectedUnitType,
+                items: context
+                    .read<AddProductScreenController>()
+                    .unitList
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.name),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  context
+                      .read<AddProductScreenController>()
+                      .onUnitSelected(value);
+                },
+                validator: (value) {
+                  if (value != null) {
+                    return null;
+                  } else {
+                    return 'Please select a unit';
+                  }
+                },
+              ),
+              const SizedBox(height: 25),
+              TextFormField(
                 controller: provider.barcodeController,
                 decoration: InputDecoration(
                   labelText: 'Barcode',
                   prefixIcon: const Icon(Icons.qr_code),
                   suffixIcon: IconButton(
-                    onPressed: () {
-                      provider.scanBarcode();
+                    onPressed: () async {
+                      await provider.scanBarcode();
+                      if (provider.barcodeController.text.isNotEmpty) {
+                        var list = (await context
+                            .read<FireStoreController>()
+                            .searchProductsUsingBarcode(
+                                provider.barcodeController.text));
+                        if (list.isNotEmpty &&
+                            !await showDuplicateBarcodeDialog(context, list)) {
+                          return;
+                        }
+                      }
                     },
                     icon: const Icon(Icons.barcode_reader),
                   ),
@@ -135,14 +211,30 @@ class AddProductScreen extends StatelessWidget {
                   builder: (BuildContext context, value, Widget? child) =>
                       ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => AddImageWidget(
-                      onTap: () {
-                        value.pickImage(context);
-                      },
-                      imageFile: index == value.imagesList.length
-                          ? null
-                          : value.imagesList[index],
-                    ),
+                    itemBuilder: (context, index) => index == 0
+                        ? AddImageWidget(
+                            onCameraPressed: () {
+                              value.pickImage(context);
+                            },
+                            onImagePressed: () {
+                              value.pickImage(context, ImageSource.gallery);
+                            },
+                          )
+                        : AddImageWidget(
+                            imageFile: value.imagesList[index - 1],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PhotoScreen(
+                                      imageFile: value.imagesList[index - 1]),
+                                ),
+                              );
+                            },
+                            onDeletePressed: () {
+                              value.deleteImage(value.imagesList[index - 1]);
+                            },
+                          ),
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 10),
                     itemCount: provider.imagesList.length + 1,

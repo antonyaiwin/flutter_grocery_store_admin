@@ -79,7 +79,7 @@ class CartItemCard extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          '₹${item.price}',
+                          '₹${item.priceMRP}',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.bold,

@@ -31,7 +31,12 @@ class FirebaseStorageController extends ChangeNotifier {
       File image, String id, String fileName) async {
     var imageRef =
         storgeRef.child('$productStoragePath$id/images/$fileName.jpg');
-    Uint8List? imageData = await getCompressedImageData(image);
+    Uint8List? imageData = await getCompressedImageData(
+      image,
+      minWidth: 950,
+      minHeight: 950,
+      quality: 70,
+    );
     if (imageData == null) {
       return null;
     }

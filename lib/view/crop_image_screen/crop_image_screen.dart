@@ -25,7 +25,6 @@ class CropImageScreen extends StatelessWidget {
       body: Crop(
         controller: cropController,
         image: image,
-        aspectRatio: 1,
         initialSize: 0.8,
         onCropped: (value) {
           Navigator.pop(context, value);

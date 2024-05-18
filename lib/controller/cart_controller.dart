@@ -54,7 +54,7 @@ class CartController extends ChangeNotifier {
   double get totalCartPrice => _cartItemList.fold(
       0.0,
       (previousValue, element) =>
-          previousValue += (element.product.price ?? 0) * element.quantity);
+          previousValue += (element.product.priceMRP ?? 0) * element.quantity);
 
   int getItemCount(int id) {
     for (var element in _cartItemList) {

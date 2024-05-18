@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/core/enum/unit_type.dart';
 import 'package:flutter_grocery_store_admin/model/product_model.dart';
 import 'package:flutter_grocery_store_admin/view/crop_image_screen/crop_image_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,22 +21,35 @@ class AddProductScreenController extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
+  TextEditingController priceMrpController = TextEditingController();
+  TextEditingController priceSellingController = TextEditingController();
+  TextEditingController quantityController = TextEditingController();
   TextEditingController barcodeController = TextEditingController();
   ProductModel? productModel;
 
   bool uploading = false;
   String message = 'Loading';
   String? selectedCategoryId;
+  UnitType? selectedUnitType = UnitType.kilogram;
 
   List<File> imagesList = [];
   List<String> imageUrlList = [];
+  List<UnitType> unitList = UnitType.values;
 
   onCategorySelected(String? value) {
     selectedCategoryId = value;
   }
 
-  Future<void> scanBarcode() async {
+  onUnitSelected(UnitType? value) {
+    selectedUnitType = value;
+  }
+
+  void deleteImage(File file) {
+    imagesList.remove(file);
+    notifyListeners();
+  }
+
+  Future<String> scanBarcode() async {
     String result = await FlutterBarcodeScanner.scanBarcode(
       '#ff6666',
       'Cancel',
@@ -46,10 +60,12 @@ class AddProductScreenController extends ChangeNotifier {
     if (result != '-1') {
       barcodeController.text = result;
     }
+    return result;
   }
 
-  Future<void> pickImage(BuildContext context) async {
-    XFile? xFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  Future<void> pickImage(BuildContext context,
+      [ImageSource source = ImageSource.camera]) async {
+    XFile? xFile = await ImagePicker().pickImage(source: source);
     if (xFile != null) {
       Uint8List? image = await xFile.readAsBytes();
       if (!context.mounted) {
@@ -88,6 +104,8 @@ class AddProductScreenController extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Product CRUD Operations
+
   Future<bool> addProduct(BuildContext context) async {
     _changeUploadingStatus(true);
 
@@ -101,7 +119,10 @@ class AddProductScreenController extends ChangeNotifier {
             name: nameController.text,
             description: descriptionController.text,
             categoryId: selectedCategoryId,
-            price: double.parse(priceController.text),
+            priceMRP: double.parse(priceMrpController.text),
+            priceSelling: double.parse(priceSellingController.text),
+            quantity: double.parse(quantityController.text),
+            unitType: selectedUnitType,
             barcode: barcodeController.text,
           ),
         );

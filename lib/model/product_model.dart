@@ -1,6 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:flutter_grocery_store_admin/core/enum/unit_type.dart';
 
 class ProductModel {
   String? collectionDocumentId;
@@ -8,7 +11,10 @@ class ProductModel {
   String? name;
   String? description;
   String? categoryId;
-  double? price;
+  double? priceMRP;
+  double? priceSelling;
+  double? quantity;
+  UnitType? unitType;
   double? rating;
   int? ratingCount;
   String? barcode;
@@ -19,7 +25,10 @@ class ProductModel {
     this.name,
     this.description,
     this.categoryId,
-    this.price,
+    this.priceMRP,
+    this.priceSelling,
+    this.quantity,
+    this.unitType,
     this.rating,
     this.ratingCount,
     this.barcode,
@@ -27,8 +36,9 @@ class ProductModel {
   });
 
   factory ProductModel.fromQueryDocumentSnapshot(
-      QueryDocumentSnapshot<Map<String, dynamic>> e) {
-    return ProductModel.fromMap(e.data()).copyWith(collectionDocumentId: e.id);
+      QueryDocumentSnapshot<Map<String, dynamic>> ref) {
+    return ProductModel.fromMap(ref.data())
+        .copyWith(collectionDocumentId: ref.id);
   }
 
   Map<String, dynamic> toMap() {
@@ -37,7 +47,10 @@ class ProductModel {
       'name': name,
       'description': description,
       'categoryId': categoryId,
-      'price': price,
+      'priceMRP': priceMRP,
+      'sellingPrice': priceSelling,
+      'quantity': quantity,
+      'unitType': unitType?.name,
       'rating': rating,
       'ratingCount': ratingCount,
       'barcode': barcode,
@@ -51,7 +64,10 @@ class ProductModel {
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (categoryId != null) 'categoryId': categoryId,
-      if (price != null) 'price': price,
+      if (priceMRP != null) 'price': priceMRP,
+      if (priceSelling != null) 'sellingPrice': priceSelling,
+      if (quantity != null) 'quantity': quantity,
+      if (unitType != null) 'unitType': unitType?.name,
       if (rating != null) 'rating': rating,
       if (ratingCount != null) 'ratingCount': ratingCount,
       if (barcode != null) 'barcode': barcode,
@@ -67,7 +83,13 @@ class ProductModel {
           map['description'] != null ? map['description'] as String : null,
       categoryId:
           map['categoryId'] != null ? map['categoryId'] as String : null,
-      price: map['price'] != null ? map['price'] as double : null,
+      priceMRP: map['priceMRP'] != null ? map['priceMRP'] as double : null,
+      priceSelling:
+          map['sellingPrice'] != null ? map['sellingPrice'] as double : null,
+      quantity: map['quantity'] != null ? map['quantity'] as double : null,
+      unitType: map['unitType'] != null
+          ? UnitType.values.byName(map['unitType'])
+          : null,
       rating: map['rating'] != null ? map['rating'] as double : null,
       ratingCount:
           map['ratingCount'] != null ? map['ratingCount'] as int : null,
@@ -84,7 +106,7 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(collectionDocumentId: $collectionDocumentId, id: $id, name: $name, description: $description, categoryId: $categoryId, price: $price, rating: $rating, ratingCount: $ratingCount, barcode: $barcode, imageUrl: $imageUrl)';
+    return 'ProductModel(collectionDocumentId: $collectionDocumentId, id: $id, name: $name, description: $description, categoryId: $categoryId, priceMRP: $priceMRP, sellingPrice: $priceSelling, quantity: $quantity, unitType: $unitType, rating: $rating, ratingCount: $ratingCount, barcode: $barcode, imageUrl: $imageUrl)';
   }
 
   ProductModel copyWith({
@@ -93,7 +115,10 @@ class ProductModel {
     String? name,
     String? description,
     String? categoryId,
-    double? price,
+    double? priceMRP,
+    double? sellingPrice,
+    double? quantity,
+    UnitType? unitType,
     double? rating,
     int? ratingCount,
     String? barcode,
@@ -105,7 +130,10 @@ class ProductModel {
       name: name ?? this.name,
       description: description ?? this.description,
       categoryId: categoryId ?? this.categoryId,
-      price: price ?? this.price,
+      priceMRP: priceMRP ?? this.priceMRP,
+      priceSelling: sellingPrice ?? this.priceSelling,
+      quantity: quantity ?? this.quantity,
+      unitType: unitType ?? this.unitType,
       rating: rating ?? this.rating,
       ratingCount: ratingCount ?? this.ratingCount,
       barcode: barcode ?? this.barcode,
