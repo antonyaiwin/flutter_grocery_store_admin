@@ -15,7 +15,7 @@ class SliverCategoryListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: 120,
+        height: 150,
         child: Consumer<FireStoreController>(
           builder: (BuildContext context, value, Widget? child) =>
               ListView.separated(

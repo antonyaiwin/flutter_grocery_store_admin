@@ -27,7 +27,7 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedCard(
       elevation: 5,
-      height: 100,
+      height: 150,
       width: 100,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
@@ -60,8 +60,9 @@ class CategoryCard extends StatelessWidget {
                     )),
                     Text(
                       item.name ?? '',
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),

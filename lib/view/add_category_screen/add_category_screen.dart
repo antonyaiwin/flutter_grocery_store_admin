@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/utils/functions/functions.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/screens/add_category_screen_controller.dart';
@@ -38,6 +39,9 @@ class AddCategoryScreen extends StatelessWidget {
                           AddImageWidget(
                         onCameraPressed: () {
                           value.pickImage(context);
+                        },
+                        onImagePressed: () {
+                          value.pickImage(context, ImageSource.gallery);
                         },
                         imageFile: value.imageFile,
                         imageUrl: value.categoryModel?.imageUrl,

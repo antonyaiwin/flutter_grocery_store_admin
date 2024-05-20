@@ -3,6 +3,7 @@ import 'package:flutter_grocery_store_admin/controller/screens/add_product_scree
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:flutter_grocery_store_admin/core/enum/unit_type.dart';
 import 'package:flutter_grocery_store_admin/model/product_model.dart';
+import 'package:flutter_grocery_store_admin/utils/functions/web_functions.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/product_card.dart';
 import 'package:flutter_grocery_store_admin/view/photo_screen/photo_screen.dart';
@@ -23,6 +24,41 @@ class AddProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Product'),
+        actions: [
+          Consumer<AddProductScreenController>(
+            builder: (BuildContext context, value, Widget? child) => IconButton(
+                onPressed: () async {
+                  await provider.scanBarcode();
+                  if (provider.barcodeController.text.isNotEmpty) {
+                    var list = (await context
+                        .read<FireStoreController>()
+                        .searchProductsUsingBarcode(
+                            provider.barcodeController.text));
+                    if (list.isNotEmpty &&
+                        !await showDuplicateBarcodeDialog(context, list)) {
+                      return;
+                    } else {
+                      provider.searchingDetails = true;
+                      provider.notifyListeners();
+                      var data =
+                          await extractData(provider.barcodeController.text);
+                      if (data?.name != null) {
+                        provider.nameController.text = data!.name!;
+                      }
+                      if (data?.description != null) {
+                        provider.descriptionController.text =
+                            data!.description!;
+                      }
+                      provider.searchingDetails = false;
+                      provider.notifyListeners();
+                    }
+                  }
+                },
+                icon: value.searchingDetails
+                    ? const CircularProgressIndicator()
+                    : const Icon(Iconsax.scan_barcode_bold)),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

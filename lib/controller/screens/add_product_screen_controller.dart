@@ -27,7 +27,7 @@ class AddProductScreenController extends ChangeNotifier {
   TextEditingController barcodeController = TextEditingController();
   ProductModel? productModel;
 
-  bool uploading = false;
+  bool uploading = false, searchingDetails = false;
   String message = 'Loading';
   String? selectedCategoryId;
   UnitType? selectedUnitType = UnitType.kilogram;

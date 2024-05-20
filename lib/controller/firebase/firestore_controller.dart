@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_grocery_store_admin/model/category_model.dart';
 import 'package:flutter_grocery_store_admin/model/product_model.dart';
 
@@ -89,6 +91,11 @@ class FireStoreController extends ChangeNotifier {
       log('deleteCategory FirebaseException: ${e.code}');
       return false;
     }
+  }
+
+  CategoryModel? getCategoryById(String id) {
+    return categoryList
+        .firstWhereOrNull((element) => element.collectionDocumentId == id);
   }
 
   // PRODUCTS CRUD Operation

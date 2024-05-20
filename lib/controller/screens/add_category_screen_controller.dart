@@ -105,8 +105,9 @@ class AddCategoryScreenController extends ChangeNotifier {
     return true;
   }
 
-  Future<void> pickImage(BuildContext context) async {
-    XFile? xFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  Future<void> pickImage(BuildContext context,
+      [ImageSource source = ImageSource.camera]) async {
+    XFile? xFile = await ImagePicker().pickImage(source: source);
     if (xFile != null) {
       Uint8List? image = await xFile.readAsBytes();
       if (!context.mounted) {

@@ -6,6 +6,7 @@ import 'package:flutter_grocery_store_admin/controller/firebase/firestore_contro
 import 'package:flutter_grocery_store_admin/controller/screens/home_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/screens/profile_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
+import 'package:flutter_grocery_store_admin/utils/functions/web_functions.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/elevated_card.dart';
 import 'package:flutter_grocery_store_admin/view/profile_screen/profile_screen.dart';
 import 'package:flutter_grocery_store_admin/view/search_screen/search_screen.dart';

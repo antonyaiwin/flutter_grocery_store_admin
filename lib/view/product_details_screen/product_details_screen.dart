@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/cart_controller.dart';
@@ -37,6 +38,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Image
                     Center(
                       child: MyNetworkImage(
                           imageUrl:
@@ -64,8 +66,16 @@ class ProductDetailsScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 10),
+
+                    // Quantity
+                    Text(
+                      item.getFormattedQuantity(),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
+                        // Selling Price
                         Text(
                           '₹${item.getFormattedSellingPrice()}',
                           style:
@@ -74,17 +84,22 @@ class ProductDetailsScreen extends StatelessWidget {
                                   ),
                         ),
                         const SizedBox(width: 3),
-                        Text(
-                          '₹${item.getFormattedMRP()}',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: ColorConstants.hintColor,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor: ColorConstants.hintColor,
-                                  ),
-                        ),
-                        const SizedBox(width: 10),
-                        if (item.getOffer() != null)
+                        if (item.getOffer() != null) ...[
+                          // MRP price
+                          Text(
+                            '₹${item.getFormattedMRP()}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: ColorConstants.hintColor,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: ColorConstants.primaryRed,
+                                ),
+                          ),
+                          const SizedBox(width: 10),
+
+                          // Offer
                           Container(
                             decoration: const BoxDecoration(
                               color: ColorConstants.primaryGreen,
@@ -102,43 +117,92 @@ class ProductDetailsScreen extends StatelessWidget {
                                       color: ColorConstants.primaryWhite,
                                       fontWeight: FontWeight.bold),
                             ),
-                          )
+                          ),
+                        ],
                       ],
                     ),
+                    if (item.rating != null && item.ratingCount != null)
+                      Row(
+                        children: [
+                          ...List.generate(5, (index) {
+                            double rating = item.rating ?? 0;
+                            return Icon(
+                              Icons.star,
+                              size: 15,
+                              color: rating.round() ~/ (index + 1) == 0
+                                  ? Colors.grey
+                                  : Colors.amber,
+                            );
+                          }),
+
+                          const SizedBox(width: 10),
+                          // Text(
+                          //   item.rating.count.toString(),
+                          //   style: Theme.of(context)
+                          //       .textTheme
+                          //       .bodyMedium
+                          //       ?.copyWith(
+                          //           color: Colors.amber,
+                          //           fontWeight: FontWeight.bold),
+                          // ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${item.ratingCount ?? 0} Ratings',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Colors.grey,
+                                ),
+                          ),
+                        ],
+                      )
+                    else
+                      Text(
+                        'No ratings yet',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey,
+                            ),
+                      ),
+                    const SizedBox(height: 20),
+                    const Divider(),
+                    Text(
+                      'Category',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontSize: 20,
+                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 10),
                     Row(
                       children: [
-                        ...List.generate(5, (index) {
-                          double rating = item.rating ?? 0;
-                          return Icon(
-                            Icons.star,
-                            size: 15,
-                            color: rating.round() ~/ (index + 1) == 0
-                                ? Colors.grey
-                                : Colors.amber,
-                          );
-                        }),
+                        MyNetworkImage(
+                            height: 75,
+                            width: 75,
+                            imageUrl: context
+                                    .read<FireStoreController>()
+                                    .getCategoryById(item.categoryId ?? '')
+                                    ?.imageUrl ??
+                                ''),
                         const SizedBox(width: 10),
-                        // Text(
-                        //   item.rating.count.toString(),
-                        //   style: Theme.of(context)
-                        //       .textTheme
-                        //       .bodyMedium
-                        //       ?.copyWith(
-                        //           color: Colors.amber,
-                        //           fontWeight: FontWeight.bold),
-                        // ),
-                        const SizedBox(width: 4),
                         Text(
-                          'Ratings',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Colors.grey,
-                                  ),
+                          context
+                                  .read<FireStoreController>()
+                                  .getCategoryById(item.categoryId ?? '')
+                                  ?.name ??
+                              'No category',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    const Divider(),
+                    const SizedBox(height: 10), const Divider(),
                     Text(
                       'Description',
                       textAlign: TextAlign.center,

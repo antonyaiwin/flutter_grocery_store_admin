@@ -71,6 +71,7 @@ class ProductCard extends StatelessWidget {
                         const Spacer(),
                         Row(
                           children: [
+                            // Selling Price
                             Text(
                               '₹${item.getFormattedSellingPrice()}',
                               style: Theme.of(context)
@@ -81,6 +82,8 @@ class ProductCard extends StatelessWidget {
                                   ),
                             ),
                             const SizedBox(width: 3),
+
+                            // MRP
                             if (item.getOffer() != null)
                               Text(
                                 '₹${item.getFormattedMRP()}',
@@ -90,7 +93,8 @@ class ProductCard extends StatelessWidget {
                                     ?.copyWith(
                                       color: ColorConstants.hintColor,
                                       decoration: TextDecoration.lineThrough,
-                                      decorationColor: ColorConstants.hintColor,
+                                      decorationColor:
+                                          ColorConstants.primaryRed,
                                     ),
                               ),
                             // Consumer<CartController>(
