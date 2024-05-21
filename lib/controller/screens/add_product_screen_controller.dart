@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:path/path.dart';
 
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:flutter_grocery_store_admin/core/enum/unit_type.dart';
@@ -129,7 +128,19 @@ class AddProductScreenController extends ChangeNotifier {
 
   bool isEdited() {
     return productModel == null ||
-        (imagesList.isNotEmpty || nameController.text != productModel?.name);
+        (imagesList.isNotEmpty ||
+            nameController.text != productModel?.name ||
+            descriptionController.text != productModel?.description ||
+            double.tryParse(priceMrpController.text) !=
+                productModel?.priceMRP ||
+            double.tryParse(priceSellingController.text) !=
+                productModel?.priceSelling ||
+            double.tryParse(quantityController.text) !=
+                productModel?.quantity ||
+            barcodeController.text != productModel?.barcode ||
+            selectedCategoryId != productModel?.categoryId ||
+            selectedUnitType != productModel?.unitType ||
+            imageUrlList != productModel?.imageUrl);
   }
 
   void _changeMessage(String msg) {

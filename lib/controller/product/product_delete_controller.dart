@@ -13,6 +13,9 @@ class ProductDeleteController extends ChangeNotifier {
   Future<void> deleteProduct(BuildContext context) async {
     deleteState = DeleteState.deleting;
     notifyListeners();
+    // await context
+    //     .read<FirebaseStorageController>()
+    //     .deleteProductFiles(product.collectionDocumentId!);
     bool deleted = await context
         .read<FireStoreController>()
         .deleteProduct(product.collectionDocumentId!);

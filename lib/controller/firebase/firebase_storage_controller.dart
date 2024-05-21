@@ -48,4 +48,11 @@ class FirebaseStorageController extends ChangeNotifier {
       return null;
     }
   }
+
+  // Future<void> deleteProductFiles(String id) async {
+  //   if (id.isEmpty) {
+  //     return;
+  //   }
+  //   await storgeRef.child('$productStoragePath$id').delete();
+  // }
 }

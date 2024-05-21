@@ -23,7 +23,8 @@ class AddProductScreen extends StatelessWidget {
         context.read<AddProductScreenController>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Product'),
+        title: Text(
+            provider.productModel == null ? 'Add New Product' : 'Edit Product'),
         actions: [
           Consumer<AddProductScreenController>(
             builder: (BuildContext context, value, Widget? child) => IconButton(

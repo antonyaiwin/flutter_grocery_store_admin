@@ -98,6 +98,11 @@ class FireStoreController extends ChangeNotifier {
         .firstWhereOrNull((element) => element.collectionDocumentId == id);
   }
 
+  ProductModel? getProductById(String id) {
+    return productList
+        .firstWhereOrNull((element) => element.collectionDocumentId == id);
+  }
+
   // PRODUCTS CRUD Operation
 
   Future<DocumentReference<Map<String, dynamic>>> addProduct(
@@ -122,7 +127,6 @@ class FireStoreController extends ChangeNotifier {
     return list;
   }
 
-// TODO : implement this correctly
   Future<void> updateProduct(ProductModel product) async {
     await db
         .collection(productsCollectionName)

@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_grocery_store_admin/controller/screens/add_product_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 import 'package:flutter_grocery_store_admin/view/add_product_screen/add_product_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/cart_controller.dart';
-import '../../controller/product/product_delete_controller.dart';
-import '../../core/enum/delete_state.dart';
 import '../../model/product_model.dart';
 import '../../view/product_details_screen/product_details_screen.dart';
-import '../functions/functions.dart';
-import 'add_to_cart_button.dart';
+import 'dialog/custom_dialogs.dart';
 import 'elevated_card.dart';
 
 class ProductCard extends StatelessWidget {
@@ -121,7 +116,7 @@ class ProductCard extends StatelessWidget {
                             //     },
                             //   ),
                             // ),
-                            Spacer(),
+                            const Spacer(),
 
                             PopupMenuButton(
                               itemBuilder: (BuildContext context) => [
@@ -146,7 +141,7 @@ class ProductCard extends StatelessWidget {
                                 PopupMenuItem(
                                   child: const Text('Delete'),
                                   onTap: () {
-                                    showDeleteDialog(context);
+                                    showProductDeleteDialog(context, item);
                                   },
                                 ),
                               ],
@@ -177,77 +172,6 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showDeleteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => ChangeNotifierProvider(
-        create: (BuildContext context) =>
-            ProductDeleteController(product: item),
-        child: AlertDialog(
-          title: const Text('Delete?'),
-          content: Consumer<ProductDeleteController>(
-            builder: (BuildContext context, value, Widget? child) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Are you sure to delete? \nThis can\'t be undone.'),
-                if (value.deleteState == DeleteState.error)
-                  const Text(
-                    'Error occurred while deleting the product!',
-                    style: TextStyle(
-                      color: ColorConstants.snackBarErrorBackground,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          actions: [
-            Consumer<ProductDeleteController>(
-              builder: (BuildContext context, value, Widget? child) {
-                if (value.deleteState == DeleteState.deleted) {
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    Navigator.pop(context);
-                    showSuccessSnackBar(
-                      context: context,
-                      content:
-                          'Product "${item.name ?? ''}" deleted successfully.',
-                    );
-                  });
-                }
-                return TextButton(
-                  onPressed: value.deleteState == DeleteState.deleting
-                      ? null
-                      : () {
-                          value.deleteProduct(context);
-                        },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Yes'),
-                      if (value.deleteState == DeleteState.deleting) ...[
-                        const SizedBox(width: 5),
-                        const SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ]
-                    ],
-                  ),
-                );
-              },
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('no'),
-            ),
           ],
         ),
       ),
