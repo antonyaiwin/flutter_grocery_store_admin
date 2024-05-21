@@ -235,6 +235,42 @@ class AddProductScreen extends StatelessWidget {
                 ),
                 keyboardType: TextInputType.number,
               ),
+              if (provider.productModel != null) ...[
+                const SizedBox(height: 20),
+                Text(
+                  'Uploaded Images',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  height: 100,
+                  child: Consumer<AddProductScreenController>(
+                    builder: (BuildContext context, value, Widget? child) =>
+                        ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => AddImageWidget.network(
+                        value.imageUrlList[index],
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PhotoScreen.network(
+                                imageUrl: value.imageUrlList[index],
+                              ),
+                            ),
+                          );
+                        },
+                        onDeletePressed: () {
+                          value.deleteImageLink(value.imageUrlList[index]);
+                        },
+                      ),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 10),
+                      itemCount: provider.imageUrlList.length,
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               Text(
                 'Images',
@@ -310,15 +346,15 @@ class AddProductScreen extends StatelessWidget {
                     } else if (value.isEdited()) {
                       // TODO implement this
 
-                      // if (await provider.updateCategory(context) &&
-                      //     context.mounted) {
-                      //   Navigator.pop(context);
-                      //   showSuccessSnackBar(
-                      //     context: context,
-                      //     content:
-                      //         'Category "${provider.nameController.text}" updated.',
-                      //   );
-                      // }
+                      if (await provider.updateProduct(context) &&
+                          context.mounted) {
+                        Navigator.pop(context);
+                        showSuccessSnackBar(
+                          context: context,
+                          content:
+                              'Product "${provider.nameController.text}" updated.',
+                        );
+                      }
                     } else {
                       showErrorSnackBar(
                           context: context, content: 'No change detected');
