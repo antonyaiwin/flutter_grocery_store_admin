@@ -25,6 +25,7 @@ class AddCategoryScreenController extends ChangeNotifier {
   bool uploading = false;
   String message = 'Loading';
   File? imageFile;
+  String? imageUrl;
   AddCategoryScreenController(
     this._fireStoreController, {
     this.categoryModel,
@@ -32,6 +33,7 @@ class AddCategoryScreenController extends ChangeNotifier {
     log('added controller');
     if (categoryModel != null) {
       nameController.text = categoryModel!.name ?? '';
+      imageUrl = categoryModel?.imageUrl;
     }
   }
   void _changeUploadingStatus(bool value) {
@@ -44,7 +46,9 @@ class AddCategoryScreenController extends ChangeNotifier {
 
   bool isEdited() {
     return categoryModel == null ||
-        (imageFile != null || nameController.text != categoryModel?.name);
+        (imageFile != null ||
+            nameController.text != categoryModel?.name ||
+            imageUrl != categoryModel?.imageUrl);
   }
 
   void _changeMessage(String msg) {
@@ -54,7 +58,7 @@ class AddCategoryScreenController extends ChangeNotifier {
 
   deleteImageFile() {
     imageFile = null;
-    categoryModel?.imageUrl = null;
+    imageUrl = null;
     notifyListeners();
   }
 
@@ -85,7 +89,7 @@ class AddCategoryScreenController extends ChangeNotifier {
     if (_fireStoreController == null) {
       return false;
     }
-    String? imageUrl;
+    // String? imageUrl;
     if (imageFile != null) {
       _changeUploadingStatus(true);
       imageUrl = await context

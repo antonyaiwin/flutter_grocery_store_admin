@@ -1,4 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grocery_store_admin/controller/custom_page_indicator_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/offer_tag.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +11,16 @@ import '../../controller/screens/add_product_screen_controller.dart';
 import '../../core/constants/color_constants.dart';
 import '../../model/product_model.dart';
 import '../../utils/global_widgets/add_to_cart_button.dart';
+import '../../utils/global_widgets/custom_page_indicartor.dart';
 import '../../utils/global_widgets/dialog/custom_dialogs.dart';
 import '../../utils/global_widgets/my_network_image.dart';
 import '../add_product_screen/add_product_screen.dart';
+import 'widgets/carousel_image_view.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   const ProductDetailsScreen({super.key, required this.item});
   final ProductModel item;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +78,12 @@ class ProductDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Image
-                        Center(
-                          child: MyNetworkImage(
-                              imageUrl: item.imageUrl != null &&
-                                      item.imageUrl!.isNotEmpty
-                                  ? item.imageUrl![0]
-                                  : ''),
+                        ChangeNotifierProvider(
+                          create: (BuildContext context) =>
+                              CustomPageIndicatorController(),
+                          child: CarouselImageView(item: item),
                         ),
+
                         const SizedBox(height: 20),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,

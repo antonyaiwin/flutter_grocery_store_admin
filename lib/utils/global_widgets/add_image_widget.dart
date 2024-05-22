@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/my_network_image.dart';
 
 import '../../core/constants/color_constants.dart';
+import '../../view/photo_screen/photo_screen.dart';
 
 class AddImageWidget extends StatelessWidget {
   const AddImageWidget({
@@ -36,7 +37,20 @@ class AddImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap ??
+          (imageFile != null || imageUrl != null
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PhotoScreen(
+                        imageFile: imageFile,
+                        imageUrl: imageUrl,
+                      ),
+                    ),
+                  );
+                }
+              : null),
       borderRadius: borderRadius ?? BorderRadius.circular(10),
       child: Container(
           clipBehavior: Clip.antiAlias,
