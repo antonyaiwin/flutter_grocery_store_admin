@@ -19,11 +19,14 @@ class OfferTag extends StatelessWidget {
         child: ClipPath(
           clipper: CustomPath(),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               // color: ColorConstants.primaryGreen,
               gradient: LinearGradient(
                 colors: [
-                  ColorConstants.primaryGreen.withBlue(150),
+                  Color.fromRGBO(0, 255, 0, 1),
+                  Color.fromRGBO(0, 200, 0, 1),
+                  // const Color.fromRGBO(0, 150, 0, 1),
+                  // const Color.fromRGBO(0, 100, 0, 1),
                   ColorConstants.primaryGreen,
                 ],
                 begin: Alignment.topCenter,
@@ -37,6 +40,7 @@ class OfferTag extends StatelessWidget {
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: ColorConstants.primaryWhite,
                     fontWeight: FontWeight.bold,
+                    height: 0.9,
                   ),
             ),
           ),
@@ -50,12 +54,14 @@ class CustomPath extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    var factor = (size.width) / 6;
+    var factor = (size.width) / 8;
     path.quadraticBezierTo(factor, factor * 2, 0, size.height);
     // path.lineTo(0, 0);
     // path.lineTo(2, 2);
     // path.lineTo(2, size.height);
 
+    path.relativeLineTo(factor, -factor);
+    path.relativeLineTo(factor, factor);
     path.relativeLineTo(factor, -factor);
     path.relativeLineTo(factor, factor);
     path.relativeLineTo(factor, -factor);

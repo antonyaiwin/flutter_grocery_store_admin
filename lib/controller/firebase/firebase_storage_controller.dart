@@ -33,9 +33,9 @@ class FirebaseStorageController extends ChangeNotifier {
         .child('$productStoragePath$id/images/${basename(image.path)}');
     Uint8List? imageData = await getCompressedImageData(
       image,
-      minWidth: 950,
-      minHeight: 950,
-      quality: 70,
+      minWidth: 900,
+      minHeight: 900,
+      quality: 55,
     );
     if (imageData == null) {
       return null;
