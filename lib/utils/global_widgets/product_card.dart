@@ -9,6 +9,7 @@ import '../../model/product_model.dart';
 import '../../view/product_details_screen/product_details_screen.dart';
 import 'dialog/custom_dialogs.dart';
 import 'elevated_card.dart';
+import 'offer_tag.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
@@ -156,21 +157,8 @@ class ProductCard extends StatelessWidget {
             ),
             if (item.getOffer() != null)
               Positioned(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: ColorConstants.primaryGreen,
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(15),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(5),
-                  child: Text(
-                    item.getOffer()!,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: ColorConstants.primaryWhite,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
+                left: 10,
+                child: OfferTag(text: item.getOffer()!),
               ),
           ],
         ),

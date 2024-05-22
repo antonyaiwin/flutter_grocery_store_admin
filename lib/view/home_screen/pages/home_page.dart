@@ -62,6 +62,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
         SliverAppBar(
+          clipBehavior: Clip.none,
           pinned: true,
           primary: true,
           surfaceTintColor: Colors.transparent,
@@ -73,7 +74,7 @@ class HomePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ElevatedCard(
-                    elevation: 3,
+                    elevation: 5,
                     padding: EdgeInsets.only(),
                     child: InkWell(
                       onTap: () => Navigator.push(

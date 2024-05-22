@@ -97,7 +97,7 @@ class ProductModel {
     if (priceMRP == null || priceSelling == null || priceMRP == priceSelling) {
       return null;
     }
-    return '₹${_getFormattedNumber(priceMRP! - priceSelling!)} OFF';
+    return '${_getFormattedNumber(((priceMRP! - priceSelling!) * 100) ~/ priceMRP!)}%\nOFF';
   }
 
   factory ProductModel.fromQueryDocumentSnapshot(

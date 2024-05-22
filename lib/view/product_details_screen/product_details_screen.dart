@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
+import 'package:flutter_grocery_store_admin/utils/global_widgets/offer_tag.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/cart_controller.dart';
@@ -92,6 +91,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                     .titleLarge
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
+                                      fontSize: 24,
                                     ),
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
@@ -104,7 +104,10 @@ class ProductDetailsScreen extends StatelessWidget {
                         // Quantity
                         Text(
                           item.getFormattedQuantity(),
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: ColorConstants.primaryColor,
+                                  ),
                         ),
                         const SizedBox(height: 10),
                         Row(
@@ -137,27 +140,12 @@ class ProductDetailsScreen extends StatelessWidget {
                               const SizedBox(width: 10),
 
                               // Offer
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: ColorConstants.primaryGreen,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                ),
-                                padding: const EdgeInsets.all(5),
-                                child: Text(
-                                  item.getOffer()!,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                          color: ColorConstants.primaryWhite,
-                                          fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                              OfferTag(text: item.getOffer()!),
                             ],
                           ],
                         ),
+
+                        // Rating
                         if (item.rating != null && item.ratingCount != null)
                           Row(
                             children: [
@@ -205,14 +193,13 @@ class ProductDetailsScreen extends StatelessWidget {
                                 ),
                           ),
                         const SizedBox(height: 20),
-                        const Divider(),
                         Text(
                           'Category',
                           textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontSize: 20,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -220,8 +207,8 @@ class ProductDetailsScreen extends StatelessWidget {
                         Row(
                           children: [
                             MyNetworkImage(
-                                height: 75,
-                                width: 75,
+                                height: 50,
+                                width: 50,
                                 imageUrl: context
                                         .read<FireStoreController>()
                                         .getCategoryById(item.categoryId ?? '')
@@ -237,20 +224,19 @@ class ProductDetailsScreen extends StatelessWidget {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
-                                  ?.copyWith(),
+                                  ?.copyWith(
+                                    color: ColorConstants.hintColor,
+                                  ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10), const Divider(),
+                        const SizedBox(height: 10),
                         Text(
                           'Description',
                           textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontSize: 20,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

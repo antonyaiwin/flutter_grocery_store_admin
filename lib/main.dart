@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Grocery Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: ColorConstants.primaryColor,
@@ -50,6 +50,9 @@ class MyApp extends StatelessWidget {
             isDense: true,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
+          scaffoldBackgroundColor: ColorConstants.scaffoldBackgroundColor,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: ColorConstants.scaffoldBackgroundColor),
         ),
         home: const SplashScreen(),
       ),
