@@ -6,7 +6,6 @@ import 'package:flutter_grocery_store_admin/controller/firebase/firestore_contro
 import 'package:flutter_grocery_store_admin/controller/screens/home_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/screens/profile_screen_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
-import 'package:flutter_grocery_store_admin/utils/functions/web_functions.dart';
 import 'package:flutter_grocery_store_admin/utils/global_widgets/elevated_card.dart';
 import 'package:flutter_grocery_store_admin/view/profile_screen/profile_screen.dart';
 import 'package:flutter_grocery_store_admin/view/search_screen/search_screen.dart';
@@ -25,10 +24,26 @@ class HomePage extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          floating: true,
+          surfaceTintColor: Colors.transparent,
           automaticallyImplyLeading: false,
-          leading: Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome Back,',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              Text(
+                FirebaseAuth.instance.currentUser?.displayName ?? 'User',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            ],
+          ),
+          actions: [
+            GestureDetector(
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -43,22 +58,8 @@ class HomePage extends StatelessWidget {
                 user: FirebaseAuth.instance.currentUser,
               ),
             ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Hi,',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Text(
-                FirebaseAuth.instance.currentUser?.displayName ?? 'User',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
+            const SizedBox(width: 15),
+          ],
         ),
         SliverAppBar(
           pinned: true,
@@ -68,51 +69,57 @@ class HomePage extends StatelessWidget {
           title: Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 20).copyWith(top: 0),
-            child: ElevatedCard(
-              elevation: 3,
-              padding: EdgeInsets.only(),
-              child: InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchScreen(),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Icon(
-                        Icons.search,
-                        color: ColorConstants.hintColor,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedCard(
+                    elevation: 3,
+                    padding: EdgeInsets.only(),
+                    child: InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchScreen(),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Search for \'Grocery\'',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.search,
                               color: ColorConstants.hintColor,
                             ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Search for \'Grocery\'',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: ColorConstants.hintColor,
+                                  ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
-                      child: VerticalDivider(
-                        color: ColorConstants.hintColor,
-                        thickness: 1,
-                        width: 1,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Ink(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(Icons.qr_code_scanner),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(width: 10),
+                ElevatedCard(
+                  elevation: 5,
+                  width: 50,
+                  child: InkWell(
+                    onTap: () {},
+                    child: Ink(
+                      padding: EdgeInsets.all(12),
+                      child: Icon(Icons.qr_code_scanner),
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ),

@@ -78,7 +78,7 @@ class AddImageWidget extends StatelessWidget {
                     imageFile != null
                         ? Image.file(imageFile!)
                         : MyNetworkImage(imageUrl: imageUrl!),
-                    if (onTap != null)
+                    if (onDeletePressed != null)
                       Positioned(
                         bottom: -9,
                         right: -9,

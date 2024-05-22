@@ -54,6 +54,7 @@ class AddCategoryScreenController extends ChangeNotifier {
 
   deleteImageFile() {
     imageFile = null;
+    categoryModel?.imageUrl = null;
     notifyListeners();
   }
 
