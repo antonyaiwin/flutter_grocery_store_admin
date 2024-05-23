@@ -1,11 +1,10 @@
 import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
 
 class CropImageScreen extends StatefulWidget {
-  CropImageScreen({super.key, required this.image});
+  const CropImageScreen({super.key, required this.image});
 
   final Uint8List image;
 

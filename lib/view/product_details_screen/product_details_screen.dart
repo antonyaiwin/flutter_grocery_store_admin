@@ -109,6 +109,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           style:
                               Theme.of(context).textTheme.bodyLarge?.copyWith(
                                     color: ColorConstants.primaryColor,
+                                    fontWeight: FontWeight.bold,
                                   ),
                         ),
                         const SizedBox(height: 10),
