@@ -80,12 +80,10 @@ class FireStoreController extends ChangeNotifier {
 
   Future<bool> deleteCategory(String categoryId) async {
     try {
-      await db
-          .collection(_categoryCollectionName)
-          .doc(categoryId)
-          .delete()
-          .onError((error, stackTrace) =>
-              log('deleteCategory onError : $error \n $stackTrace'));
+      await db.collection(_categoryCollectionName).doc(categoryId).delete()
+          /* .onError((error, stackTrace) =>
+              log('deleteCategory onError : $error \n $stackTrace')) */
+          ;
       return true;
     } on FirebaseException catch (e) {
       log('deleteCategory FirebaseException: ${e.code}');
@@ -137,12 +135,10 @@ class FireStoreController extends ChangeNotifier {
 
   Future<bool> deleteProduct(String productId) async {
     try {
-      await db
-          .collection(productsCollectionName)
-          .doc(productId)
-          .delete()
-          .onError((error, stackTrace) =>
-              log('deleteProduct onError : $error \n $stackTrace'));
+      await db.collection(productsCollectionName).doc(productId).delete()
+          /*  .onError((error, stackTrace) =>
+              log('deleteProduct onError : $error \n $stackTrace')) */
+          ;
       return true;
     } on FirebaseException catch (e) {
       log('deleteProduct FirebaseException: ${e.code}');

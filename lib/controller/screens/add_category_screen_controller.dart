@@ -2,8 +2,10 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grocery_store_admin/utils/functions/functions.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -44,16 +46,16 @@ class AddCategoryScreenController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _changeMessage(String msg) {
+    message = msg;
+    notifyListeners();
+  }
+
   bool isEdited() {
     return categoryModel == null ||
         (imageFile != null ||
             nameController.text != categoryModel?.name ||
             imageUrl != categoryModel?.imageUrl);
-  }
-
-  void _changeMessage(String msg) {
-    message = msg;
-    notifyListeners();
   }
 
   deleteImageFile() {
@@ -72,40 +74,60 @@ class AddCategoryScreenController extends ChangeNotifier {
     String lastIndex = _fireStoreController.getLastCategoryIndex() ?? '-1';
     String id = (int.parse(lastIndex) + 1).toString().padLeft(10, '0');
     String? imageUrl;
-    if (imageFile != null) {
-      _changeMessage(uploadMessage);
-      imageUrl = await context
-          .read<FirebaseStorageController>()
-          .addCategoryImage(imageFile!, id);
+    try {
+      if (imageFile != null) {
+        _changeMessage(uploadMessage);
+        imageUrl = await context
+            .read<FirebaseStorageController>()
+            .addCategoryImage(imageFile!, id);
+      }
+      _changeMessage(addingCategoryMessage);
+      await _fireStoreController.addCategory(
+          CategoryModel(id: id, imageUrl: imageUrl, name: nameController.text));
+      _changeUploadingStatus(false);
+    } on FirebaseException catch (e) {
+      if (!context.mounted) {
+        return false;
+      }
+      showErrorSnackBar(
+          context: context, content: 'Error : ${e.message ?? ''}');
+      _changeUploadingStatus(false);
+      return false;
     }
-    _changeMessage(addingCategoryMessage);
-    await _fireStoreController.addCategory(
-        CategoryModel(id: id, imageUrl: imageUrl, name: nameController.text));
-    _changeUploadingStatus(false);
     return true;
   }
 
   Future<bool> updateCategory(BuildContext context) async {
-    if (_fireStoreController == null) {
+    try {
+      if (_fireStoreController == null) {
+        return false;
+      }
+      // String? imageUrl;
+      if (imageFile != null) {
+        _changeUploadingStatus(true);
+        imageUrl = await context
+            .read<FirebaseStorageController>()
+            .addCategoryImage(imageFile!, categoryModel!.id!);
+      }
+      _changeMessage(updatingCategoryMessage);
+      await _fireStoreController.updateCategory(
+        CategoryModel(
+          collectionDocumentId: categoryModel!.collectionDocumentId,
+          imageUrl: imageUrl,
+          name: nameController.text == categoryModel!.name
+              ? null
+              : nameController.text,
+        ),
+      );
+    } on FirebaseException catch (e) {
+      if (!context.mounted) {
+        return false;
+      }
+      showErrorSnackBar(
+          context: context, content: 'Error : ${e.message ?? ''}');
+      _changeUploadingStatus(false);
       return false;
     }
-    // String? imageUrl;
-    if (imageFile != null) {
-      _changeUploadingStatus(true);
-      imageUrl = await context
-          .read<FirebaseStorageController>()
-          .addCategoryImage(imageFile!, categoryModel!.id!);
-    }
-    _changeMessage(updatingCategoryMessage);
-    await _fireStoreController.updateCategory(
-      CategoryModel(
-        collectionDocumentId: categoryModel!.collectionDocumentId,
-        imageUrl: imageUrl,
-        name: nameController.text == categoryModel!.name
-            ? null
-            : nameController.text,
-      ),
-    );
     _changeUploadingStatus(false);
     return true;
   }

@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_grocery_store_admin/core/enum/unit_type.dart';
 import 'package:flutter_grocery_store_admin/model/product_model.dart';
 import 'package:flutter_grocery_store_admin/view/crop_image_screen/crop_image_screen.dart';
 
+import '../../utils/functions/functions.dart';
 import '../firebase/firebase_storage_controller.dart';
 
 class AddProductScreenController extends ChangeNotifier {
@@ -156,88 +158,109 @@ class AddProductScreenController extends ChangeNotifier {
     int lastIndex =
         context.read<FireStoreController>().getLastProductIndex() ?? -1;
     lastIndex++;
-    _changeMessage(addingProductMessage);
-    var ref = await context.read<FireStoreController>().addProduct(
-          ProductModel(
-            id: lastIndex,
-            name: nameController.text,
-            description: descriptionController.text,
-            categoryId: selectedCategoryId,
-            priceMRP: double.parse(priceMrpController.text),
-            priceSelling: double.parse(priceSellingController.text),
-            quantity: double.parse(quantityController.text),
-            unitType: selectedUnitType,
-            barcode: barcodeController.text,
-          ),
-        );
+    try {
+      _changeMessage(addingProductMessage);
+      var ref = await context.read<FireStoreController>().addProduct(
+            ProductModel(
+              id: lastIndex,
+              name: nameController.text,
+              description: descriptionController.text,
+              categoryId: selectedCategoryId,
+              priceMRP: double.parse(priceMrpController.text),
+              priceSelling: double.parse(priceSellingController.text),
+              quantity: double.parse(quantityController.text),
+              unitType: selectedUnitType,
+              barcode: barcodeController.text,
+            ),
+          );
 
-    if (imagesList.isNotEmpty) {
-      _changeMessage(uploadMessage);
-    }
-    for (var imageFile in imagesList) {
-      var imageUrl =
-          await context.read<FirebaseStorageController>().addProductImage(
-                imageFile,
-                ref.id,
-              );
-      if (imageUrl != null) {
-        imageUrlList.add(imageUrl);
+      if (imagesList.isNotEmpty) {
+        _changeMessage(uploadMessage);
       }
+      for (var imageFile in imagesList) {
+        var imageUrl =
+            await context.read<FirebaseStorageController>().addProductImage(
+                  imageFile,
+                  ref.id,
+                );
+        if (imageUrl != null) {
+          imageUrlList.add(imageUrl);
+        }
+      }
+      await context.read<FireStoreController>().updateProduct(
+            ProductModel(collectionDocumentId: ref.id, imageUrl: imageUrlList),
+          );
+    } on FirebaseException catch (e) {
+      if (!context.mounted) {
+        return false;
+      }
+      showErrorSnackBar(
+          context: context, content: 'Error : ${e.message ?? ''}');
+      _changeUploadingStatus(false);
+      return false;
     }
-    await context.read<FireStoreController>().updateProduct(
-          ProductModel(collectionDocumentId: ref.id, imageUrl: imageUrlList),
-        );
     _changeUploadingStatus(false);
     return true;
   }
 
   Future<bool> updateProduct(BuildContext context) async {
-    if (imagesList.isNotEmpty) {
-      _changeUploadingStatus(true);
-      for (var file in imagesList) {
-        String? imageUrl = await context
-            .read<FirebaseStorageController>()
-            .addProductImage(file, productModel!.collectionDocumentId!);
-        if (imageUrl != null) {
-          imageUrlList.add(imageUrl);
+    try {
+      if (imagesList.isNotEmpty) {
+        _changeUploadingStatus(true);
+        for (var file in imagesList) {
+          String? imageUrl = await context
+              .read<FirebaseStorageController>()
+              .addProductImage(file, productModel!.collectionDocumentId!);
+          if (imageUrl != null) {
+            imageUrlList.add(imageUrl);
+          }
         }
       }
+      _changeMessage(updatingProductMessage);
+      await context.read<FireStoreController>().updateProduct(
+            ProductModel(
+              collectionDocumentId: productModel!.collectionDocumentId,
+              name: nameController.text == productModel!.name
+                  ? null
+                  : nameController.text,
+              description:
+                  descriptionController.text == productModel!.description
+                      ? null
+                      : descriptionController.text,
+              categoryId: selectedCategoryId == productModel!.categoryId
+                  ? null
+                  : selectedCategoryId,
+              priceMRP: double.tryParse(priceMrpController.text) ==
+                      productModel!.priceMRP
+                  ? null
+                  : double.tryParse(priceMrpController.text),
+              priceSelling: double.tryParse(priceSellingController.text) ==
+                      productModel!.priceSelling
+                  ? null
+                  : double.tryParse(priceSellingController.text),
+              quantity: double.tryParse(quantityController.text) ==
+                      productModel!.quantity
+                  ? null
+                  : double.tryParse(quantityController.text),
+              unitType: selectedUnitType == productModel!.unitType
+                  ? null
+                  : selectedUnitType,
+              barcode: barcodeController.text == productModel!.barcode
+                  ? null
+                  : barcodeController.text,
+              imageUrl:
+                  productModel!.imageUrl == imageUrlList ? null : imageUrlList,
+            ),
+          );
+    } on FirebaseException catch (e) {
+      if (!context.mounted) {
+        return false;
+      }
+      showErrorSnackBar(
+          context: context, content: 'Error : ${e.message ?? ''}');
+      _changeUploadingStatus(false);
+      return false;
     }
-    _changeMessage(updatingProductMessage);
-    await context.read<FireStoreController>().updateProduct(
-          ProductModel(
-            collectionDocumentId: productModel!.collectionDocumentId,
-            name: nameController.text == productModel!.name
-                ? null
-                : nameController.text,
-            description: descriptionController.text == productModel!.description
-                ? null
-                : descriptionController.text,
-            categoryId: selectedCategoryId == productModel!.categoryId
-                ? null
-                : selectedCategoryId,
-            priceMRP: double.tryParse(priceMrpController.text) ==
-                    productModel!.priceMRP
-                ? null
-                : double.tryParse(priceMrpController.text),
-            priceSelling: double.tryParse(priceSellingController.text) ==
-                    productModel!.priceSelling
-                ? null
-                : double.tryParse(priceSellingController.text),
-            quantity: double.tryParse(quantityController.text) ==
-                    productModel!.quantity
-                ? null
-                : double.tryParse(quantityController.text),
-            unitType: selectedUnitType == productModel!.unitType
-                ? null
-                : selectedUnitType,
-            barcode: barcodeController.text == productModel!.barcode
-                ? null
-                : barcodeController.text,
-            imageUrl:
-                productModel!.imageUrl == imageUrlList ? null : imageUrlList,
-          ),
-        );
     _changeUploadingStatus(false);
     return true;
   }
