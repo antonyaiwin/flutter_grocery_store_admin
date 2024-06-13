@@ -51,7 +51,7 @@ class HomeBottomNavBar extends StatelessWidget {
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_outlined),
             activeIcon: Icon(Icons.list_alt),
-            label: 'My List',
+            label: 'Orders',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),
