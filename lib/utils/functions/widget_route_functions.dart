@@ -43,6 +43,7 @@ Future<T?> showMyModalBottomSheet<T>({
                   radius: 23,
                   child: const Icon(
                     MingCute.close_fill,
+                    color: ColorConstants.primaryWhite,
                   ),
                 ),
               ),

@@ -75,11 +75,21 @@ class OrdersController extends ChangeNotifier {
   }
 
   loadNewOrders() {
-    newOrderList = activeOrderList
+    var newList = activeOrderList
         .where((element) => element.data().orderAcceptedTime == null)
         .toList();
+
+    List<String> newOrdersIdList = newOrderList.map((e) => e.id).toList();
+    bool hasNewOrder = false;
+    for (var element in newList) {
+      if (!newOrdersIdList.contains(element.id)) {
+        hasNewOrder = true;
+        break;
+      }
+    }
     notifyListeners();
-    if (newOrderList.isNotEmpty) {
+    newOrderList = newList;
+    if (newOrderList.isNotEmpty && hasNewOrder) {
       showMyModalBottomSheet(
         context: NavigationService.navigatorKey.currentContext!,
         builder: (context, scrollController) =>
@@ -97,6 +107,7 @@ class NewOrdersBottomSheetBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.hardEdge,
       decoration: const BoxDecoration(
         color: ColorConstants.primaryWhite,
         borderRadius: BorderRadius.vertical(

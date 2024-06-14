@@ -183,7 +183,7 @@ class OrderDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Consumer<OrderDetailsScreenController>(
               builder: (BuildContext context, value, Widget? child) {
-                return SwipeButton.expand(
+                return SwipeButton(
                   thumbPadding: const EdgeInsets.all(3),
                   activeTrackColor:
                       order.getOrderStatus().color.withOpacity(0.4),
@@ -201,7 +201,7 @@ class OrderDetailsScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onSwipe: () {
+                  onSwipeEnd: () {
                     provider.orderSwiped(value.order.getOrderStatus());
                   },
                 );
