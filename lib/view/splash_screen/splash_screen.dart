@@ -26,7 +26,8 @@ class SplashScreen extends StatelessWidget {
                   )
                 : ChangeNotifierProvider(
                     create: (BuildContext context) => HomeScreenController(),
-                    child: const HomeScreen()),
+                    child: const HomeScreen(),
+                  ),
           ),
         );
       },

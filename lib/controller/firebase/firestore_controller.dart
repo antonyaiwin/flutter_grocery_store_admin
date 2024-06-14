@@ -7,9 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grocery_store_admin/model/category_model.dart';
 import 'package:flutter_grocery_store_admin/model/product_model.dart';
 
+import '../../model/user_data_model.dart';
+
 class FireStoreController extends ChangeNotifier {
   static const String _categoryCollectionName = 'categories';
   static const String productsCollectionName = 'grocery-shop/data/products';
+  static const String _userDataCollectionName = 'users';
+
   var db = FirebaseFirestore.instance;
   List<CategoryModel> categoryList = [];
   List<ProductModel> productList = [];
@@ -27,6 +31,14 @@ class FireStoreController extends ChangeNotifier {
 
   int? getLastProductIndex() {
     return productList.isEmpty ? 0 : productList[productList.length - 1].id;
+  }
+
+  CollectionReference<UserDataModel> get userDataCollection {
+    return db.collection(_userDataCollectionName).withConverter(
+          fromFirestore: (snapshot, options) =>
+              UserDataModel.fromMap(snapshot.data() ?? {}),
+          toFirestore: (value, options) => value.toMap(),
+        );
   }
 
   _initCategoriesListener() {

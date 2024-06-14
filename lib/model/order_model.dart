@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_grocery_store_admin/core/enum/order_status.dart';
-
 import 'package:flutter_grocery_store_admin/model/address_model.dart';
 import 'package:flutter_grocery_store_admin/model/cart_item_model.dart';
 
 class OrderModel {
-  String? collectionDocumentId;
   String? createdUserId;
   String? paymentMethod;
   List<CartItemModel>? cartItems;
@@ -18,13 +15,13 @@ class OrderModel {
   int? itemCount;
   DateTime? orderCreatedTime;
   DateTime? orderAcceptedTime;
+  DateTime? orderDeniedTime;
   DateTime? orderPackedTime;
   DateTime? orderOutForDeliveryTime;
   DateTime? orderDeliveredTime;
   DateTime? orderCancelledTime;
 
   OrderModel({
-    this.collectionDocumentId,
     this.createdUserId,
     this.paymentMethod,
     this.cartItems,
@@ -35,6 +32,7 @@ class OrderModel {
     this.itemCount,
     this.orderCreatedTime,
     this.orderAcceptedTime,
+    this.orderDeniedTime,
     this.orderPackedTime,
     this.orderOutForDeliveryTime,
     this.orderDeliveredTime,
@@ -43,29 +41,35 @@ class OrderModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'createdUserId': createdUserId,
-      'paymentMethod': paymentMethod,
-      'cartItems': cartItems?.map((x) => x.toMap()).toList(),
-      'deliveryAddress': deliveryAddress?.toMap(),
-      'totalPrice': totalPrice,
-      'deliveryPrice': deliveryPrice,
-      'finalPrice': finalPrice,
-      'itemCount': itemCount,
-      'orderCreatedTime': orderCreatedTime?.millisecondsSinceEpoch,
-      'orderAcceptedTime': orderAcceptedTime?.millisecondsSinceEpoch,
-      'orderPackedTime': orderPackedTime?.millisecondsSinceEpoch,
-      'orderOutForDeliveryTime':
-          orderOutForDeliveryTime?.millisecondsSinceEpoch,
-      'orderDeliveredTime': orderDeliveredTime?.millisecondsSinceEpoch,
-      'orderCancelledTime': orderCancelledTime?.millisecondsSinceEpoch,
+      if (createdUserId != null) 'createdUserId': createdUserId,
+      if (paymentMethod != null) 'paymentMethod': paymentMethod,
+      if (cartItems != null)
+        'cartItems': cartItems?.map((x) => x.toMap()).toList(),
+      if (deliveryAddress != null) 'deliveryAddress': deliveryAddress?.toMap(),
+      if (totalPrice != null) 'totalPrice': totalPrice,
+      if (deliveryPrice != null) 'deliveryPrice': deliveryPrice,
+      if (finalPrice != null) 'finalPrice': finalPrice,
+      if (itemCount != null) 'itemCount': itemCount,
+      if (orderCreatedTime != null)
+        'orderCreatedTime': orderCreatedTime?.millisecondsSinceEpoch,
+      if (orderAcceptedTime != null)
+        'orderAcceptedTime': orderAcceptedTime?.millisecondsSinceEpoch,
+      if (orderDeniedTime != null)
+        'orderDeniedTime': orderDeniedTime?.millisecondsSinceEpoch,
+      if (orderPackedTime != null)
+        'orderPackedTime': orderPackedTime?.millisecondsSinceEpoch,
+      if (orderOutForDeliveryTime != null)
+        'orderOutForDeliveryTime':
+            orderOutForDeliveryTime?.millisecondsSinceEpoch,
+      if (orderDeliveredTime != null)
+        'orderDeliveredTime': orderDeliveredTime?.millisecondsSinceEpoch,
+      if (orderCancelledTime != null)
+        'orderCancelledTime': orderCancelledTime?.millisecondsSinceEpoch,
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
-      collectionDocumentId: map['collectionDocumentId'] != null
-          ? map['collectionDocumentId'] as String
-          : null,
       createdUserId:
           map['createdUserId'] != null ? map['createdUserId'] as String : null,
       paymentMethod:
@@ -93,6 +97,9 @@ class OrderModel {
       orderAcceptedTime: map['orderAcceptedTime'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['orderAcceptedTime'] as int)
           : null,
+      orderDeniedTime: map['orderDeniedTime'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['orderDeniedTime'] as int)
+          : null,
       orderPackedTime: map['orderPackedTime'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['orderPackedTime'] as int)
           : null,
@@ -111,11 +118,11 @@ class OrderModel {
     );
   }
 
-  factory OrderModel.fromQueryDocumentSnapshot(
-      QueryDocumentSnapshot<Map<String, dynamic>> query) {
-    var map = query.data();
-    return OrderModel.fromMap(map).copyWith(collectionDocumentId: query.id);
-  }
+  // factory OrderModel.fromQueryDocumentSnapshot(
+  //     QueryDocumentSnapshot<Map<String, dynamic>> query) {
+  //   var map = query.data();
+  //   return OrderModel.fromMap(map).copyWith(collectionDocumentId: query.id);
+  // }
 
   String toJson() => json.encode(toMap());
 
@@ -123,7 +130,6 @@ class OrderModel {
       OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   OrderModel copyWith({
-    String? collectionDocumentId,
     String? createdUserId,
     String? paymentMethod,
     List<CartItemModel>? cartItems,
@@ -134,13 +140,13 @@ class OrderModel {
     int? itemCount,
     DateTime? orderCreatedTime,
     DateTime? orderAcceptedTime,
+    DateTime? orderDeniedTime,
     DateTime? orderPackedTime,
     DateTime? orderOutForDeliveryTime,
     DateTime? orderDeliveredTime,
     DateTime? orderCancelledTime,
   }) {
     return OrderModel(
-      collectionDocumentId: collectionDocumentId ?? this.collectionDocumentId,
       createdUserId: createdUserId ?? this.createdUserId,
       paymentMethod: paymentMethod ?? this.paymentMethod,
       cartItems: cartItems ?? this.cartItems,
@@ -151,6 +157,7 @@ class OrderModel {
       itemCount: itemCount ?? this.itemCount,
       orderCreatedTime: orderCreatedTime ?? this.orderCreatedTime,
       orderAcceptedTime: orderAcceptedTime ?? this.orderAcceptedTime,
+      orderDeniedTime: orderDeniedTime ?? this.orderDeniedTime,
       orderPackedTime: orderPackedTime ?? this.orderPackedTime,
       orderOutForDeliveryTime:
           orderOutForDeliveryTime ?? this.orderOutForDeliveryTime,
@@ -174,5 +181,10 @@ class OrderModel {
       return OrderStatus.orderCreated;
     }
     return OrderStatus.unknown;
+  }
+
+  @override
+  String toString() {
+    return 'OrderModel(createdUserId: $createdUserId, paymentMethod: $paymentMethod, cartItems: $cartItems, deliveryAddress: $deliveryAddress, totalPrice: $totalPrice, deliveryPrice: $deliveryPrice, finalPrice: $finalPrice, itemCount: $itemCount, orderCreatedTime: $orderCreatedTime, orderAcceptedTime: $orderAcceptedTime, orderDeniedTime: $orderDeniedTime, orderPackedTime: $orderPackedTime, orderOutForDeliveryTime: $orderOutForDeliveryTime, orderDeliveredTime: $orderDeliveredTime, orderCancelledTime: $orderCancelledTime)';
   }
 }

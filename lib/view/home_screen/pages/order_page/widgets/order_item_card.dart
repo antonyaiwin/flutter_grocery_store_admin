@@ -1,45 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../controller/screens/order_details_screen_controller/order_details_screen_controller.dart';
 import '../../../../../core/constants/color_constants.dart';
 import '../../../../../core/constants/image_constants.dart';
 import '../../../../../core/enum/order_status.dart';
 import '../../../../../model/order_model.dart';
 import '../../../../../utils/global_widgets/order_header.dart';
 import '../../../../../utils/global_widgets/order_status_indicator.dart';
+import '../../../../order_details_screen/order_details_screen.dart';
 
 class OrderItemCard extends StatelessWidget {
   const OrderItemCard({
     super.key,
-    required this.order,
+    required this.orderSnap,
     this.isDense = false,
   });
 
   const OrderItemCard.dense({
     super.key,
-    required this.order,
+    required this.orderSnap,
   }) : isDense = true;
 
-  final OrderModel order;
+  final QueryDocumentSnapshot<OrderModel> orderSnap;
+  OrderModel get order => orderSnap.data();
   final bool isDense;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.push(
-        // context,
-        // MaterialPageRoute(
-        //   builder: (context) => ChangeNotifierProvider(
-        //     create: (context) =>
-        //         OrderDetailsScreenController(context: context, order: order),
-        //     child: OrderDetailsScreen(),
-        //   ),
-        // ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChangeNotifierProvider(
+              create: (context) => OrderDetailsScreenController(
+                context: context,
+                orderSnap: orderSnap,
+              ),
+              child: OrderDetailsScreen(),
+            ),
+          ),
+        );
       },
       borderRadius: BorderRadius.circular(10),
       child: Ink(

@@ -56,8 +56,10 @@ class ActiveOrdersColumn extends StatelessWidget {
               child: ListView.separated(
                 padding: const EdgeInsets.all(20),
                 itemBuilder: (context, index) {
-                  var order = value.activeOrderList[index].data();
-                  return OrderItemCard(order: order);
+                  var order = value.activeOrderList[index];
+                  return OrderItemCard(
+                    orderSnap: order,
+                  );
                 },
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 10),
@@ -93,8 +95,8 @@ class PastOrdersColumn extends StatelessWidget {
               child: ListView.separated(
                 padding: const EdgeInsets.all(20),
                 itemBuilder: (context, index) {
-                  var order = value.pastOrderList[index].data();
-                  return OrderItemCard(order: order);
+                  var order = value.pastOrderList[index];
+                  return OrderItemCard(orderSnap: order);
                 },
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 10),

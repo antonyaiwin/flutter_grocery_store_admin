@@ -5,6 +5,7 @@ import 'package:flutter_grocery_store_admin/controller/firebase/firebase_storage
 import 'package:flutter_grocery_store_admin/controller/firebase/firestore_controller.dart';
 import 'package:flutter_grocery_store_admin/controller/order/orders_controller.dart';
 import 'package:flutter_grocery_store_admin/core/constants/color_constants.dart';
+import 'package:flutter_grocery_store_admin/service/navigation_service.dart';
 import 'package:flutter_grocery_store_admin/view/splash_screen/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -37,10 +38,11 @@ class MyApp extends StatelessWidget {
           create: (context) => FirebaseStorageController(),
         ),
         ChangeNotifierProvider(
-          create: (context) => OrdersController(context),
+          create: (context) => OrdersController(),
         ),
       ],
       child: MaterialApp(
+        navigatorKey: NavigationService.navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Grocery Demo',
         theme: ThemeData(
